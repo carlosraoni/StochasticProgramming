@@ -23,13 +23,45 @@ class FormatError(Error):
         if(self._reason != None):
             ret += "[REASON] %s\n" % str(self._reason)
         return ret
+
+
+class WrongFileError(Error):
     
+    def __init__(self, msg, reason = None):
+        self._message = msg
+        self._reason = reason
+        
+    def __str__(self):
+        ret = "[WRONG_FILE_ERROR] %s\n" % str(self._message)
+        if(self._reason != None):
+            ret += "[REASON] %s\n" % str(self._reason)
+        return ret
+
+
+class NotSupportedError(Error):
+    
+    def __init__(self, msg, reason = None):
+        self._message = msg
+        self._reason = reason
+        
+    def __str__(self):
+        ret = "[NOT_SUPPORTED_ERROR] %s\n" % str(self._message)
+        if(self._reason != None):
+            ret += "[REASON] %s\n" % str(self._reason)
+        return ret
+        
 
 class Column(object):
     
     def __init__(self, id, name):
         self._id = id
         self._name = name
+        
+    def get_id(self):
+        return self._id
+    
+    def get_name(self):
+        return self._name
   
         
 class RowType(object):
@@ -52,10 +84,35 @@ class Row(object):
         
         self._coefficients = {}
         self._rhs = 0
+        self._rhs_name = ''
+        
+    def get_id(self):
+        return self._id
         
     def add_coef_to_column(self, column, coef):
         self._coefficients[column] = coef
         
+    def set_rhs(self, rhs_name, coef):
+        self._rhs_name = rhs_name
+        self._rhs = coef
+
+
+class Period(object):
+    
+    def __init__(self, name, column_range, row_range):
+        self._name = name
+        self._column_range = column_range
+        self._row_range = row_range
+        
+    def get_name(self):
+        return self._name
+        
+    def get_column_range(self):
+        return self._column_range
+    
+    def get_row_range(self):
+        return self._row_range
+
 
 class SMPSReader(object):
     
@@ -69,7 +126,7 @@ class SMPSReader(object):
         self._column_by_name = {}
         self._row_by_name = {}
         self._obj = None
-        
+        self._periods = []        
     
 
     def _read_name_section(self, core_file):
@@ -154,8 +211,30 @@ class SMPSReader(object):
         return line
     
     
-    def _read_rhs_section(self, core_file, next_section):
-        pass
+    def _read_rhs_section(self, core_file, last_read_line):
+        line_arr = last_read_line.split()
+        rhs_name = 'RHS'
+        if len(line_arr) > 1:
+            rhs_name = line_arr[1]
+        print 'RHS Name = ', rhs_name
+        
+        line = core_file.readline()
+        line_arr = line.split()
+        while len(line_arr) >= 3:
+            rhs_name = line_arr[0]
+            for i in range(1, len(line_arr), 2):
+                row_name = line_arr[i]
+                coef = float(line_arr[i+1])
+                print 'Coefficient of rhs', rhs_name, 'in row', row_name, '=', coef
+                row = self._row_by_name.get(row_name, None)
+                if row is None:
+                    raise FormatError('Row not found', "Row %s was not found" % row_name)
+                row.set_rhs(rhs_name, coef)
+            
+            line = core_file.readline()
+            line_arr = line.split()
+        
+        return line
     
     
     def _read_core_file(self):
@@ -163,12 +242,88 @@ class SMPSReader(object):
             self._read_name_section(core_file)
             last_read_line = self._read_rows_section(core_file)
             last_read_line = self._read_columns_section(core_file, last_read_line)
-            last_read_line = self._read_rhs_section(core_file, last_read_line)
+            if last_read_line.startswith('RHS'):
+                last_read_line = self._read_rhs_section(core_file, last_read_line)
+            if not last_read_line.startswith('ENDATA'):
+                print 'Ignoring next sections. SMPSReader does not support the additional optional sections'
+    
+    
+    def _read_time_section(self, time_file):
+        line = time_file.readline()
+        line_arr = line.split()
+        if len(line_arr) < 2:
+            raise FormatError('Time section missing', 'Less than 2 fields in first line of file')
+        if line_arr[0] != 'TIME':
+            raise FormatError('Time section missing', 'Wrong name of the section')
+        instance_name = line_arr[1]
+        print 'TIME =', instance_name
+        if instance_name != self._name:
+            raise WrongFileError('Time file for different problem instance', "Core file describes problem %s, while time file describes problem %s" % (self._name, instance_name))
+        
+        return line
+    
+    
+    def _read_periods_section(self, time_file):
+        line_arr = time_file.readline().split()
+        if len(line_arr) < 1:
+            raise FormatError('Periods section missing', 'Empty line')
+        if line_arr[0] != 'PERIODS':
+            raise FormatError('Periods section missing', "Expecting PERIODS section received %s" % line_arr[0])
+        if len(line_arr) > 1 and line_arr[1] != 'IMPLICIT':
+            raise NotSupportedError('Time section type not supported', "SMPSReader only support IMPLICIT time section, received %s" % line_arr[1])
+        
+        line = time_file.readline()
+        line_arr = line.split()
+        
+        period_names = []
+        row_indexes = []
+        column_indexes = []
+        while len(line_arr) >= 3:
+            column_name = line_arr[0]
+            row_name = line_arr[1]
+            period_name = line_arr[2]
+            
+            column = self._column_by_name.get(column_name, None)
+            if column is None:
+                raise FormatError('Column not found', "Column %s was not found" % column_name)
+            row = self._row_by_name.get(row_name, None)
+            if row is None:
+                raise FormatError('Row not found', "Row %s was not found" % row_name)
+            
+            period_names.append(period_name)
+            column_indexes.append(column.get_id())
+            row_indexes.append(row.get_id())
+            print 'Reading period col/row begins [', period_name, column_name, row_name, ']'
+            
+            line = time_file.readline()
+            line_arr = line.split()
+        
+        n_periods = len(period_names)
+        for i in range(n_periods - 1):
+            column_range = (column_indexes[i], column_indexes[i+1])
+            row_range = (row_indexes[i], row_indexes[i+1])
+            period = Period(period_names[i], column_range, row_range)
+            self._periods.append(period)
+        column_range = (column_indexes[n_periods - 1], len(self._columns))
+        row_range = (row_indexes[n_periods - 1], len(self._rows))
+        period = Period(period_names[n_periods - 1], column_range, row_range)
+        self._periods.append(period)
+        
+        for p in self._periods:
+            column_range = p.get_column_range()
+            row_range = p.get_row_range()
+            print 'Period', p.get_name(), '= col ', column_range, ', row', row_range 
+        
+        return line
     
     def _read_time_file(self):
-        pass
-    
-    
+        with open(self._time_file_path) as time_file:
+            self._read_time_section(time_file)
+            last_read_line = self._read_periods_section(time_file)
+            if not last_read_line.startswith('ENDATA'):
+                print 'Ignoring next sections of time file. SMPSReader does not support the additional optional sections'
+                
+                
     def _read_stoch_file(self):
         pass
     
