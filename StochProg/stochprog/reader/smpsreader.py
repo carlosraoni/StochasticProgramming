@@ -340,6 +340,10 @@ if __name__ == '__main__':
         smps_reader.read()
     except FormatError as  e:
         print e
+    except NotSupportedError as e:
+        print e
+    except WrongFileError as e:
+        print e
     
     
     
