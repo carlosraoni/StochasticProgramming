@@ -1,8 +1,12 @@
 from sets import Set
 
-CORE_FILE_PATH = '../../instances/assets.cor'
-TIME_FILE_PATH = '../../instances/assets.tim'
-STOCH_FILE_PATH = '../../instances/assets.sto.small'
+#CORE_FILE_PATH = '../../instances/assets.cor'
+#TIME_FILE_PATH = '../../instances/assets.tim'
+#STOCH_FILE_PATH = '../../instances/assets.sto.small'
+
+CORE_FILE_PATH = '../../instances/env.cor'
+TIME_FILE_PATH = '../../instances/env.tim'
+STOCH_FILE_PATH = '../../instances/env.sto.1200'
 
 _STOCH_FILE_SECTION_NAMES = Set(['STOCH',
                                  'SIMPLE',
@@ -171,6 +175,28 @@ class Block(object):
                 result += " %.2f" % rea[i]
             result += '\n'
         return result   
+
+
+class Indep(object):
+    
+    def __init__(self, col_name, row_name, period):
+        self._col_name = col_name
+        self._row_name = row_name
+        self._period = period
+        self._realizations = [] # array of realizations of coefficients of elements of coef_elements
+        self._realization_prob = [] # probability of each realization
+        
+    def add_realization(self, prob, value):
+        self._realizations.append(value)
+        self._realization_prob.append(prob)
+        
+    def __str__(self):
+        result = "INDEP (%s,%s) (%s)\n" % (self._col_name, self._row_name, self._period)
+        result += "Realizations: %d\n" % len(self._realizations)
+        result += "Probabilities: %s\n" % self._realization_prob
+        result += "(%s, %s) = %s\n" % (self._col_name, self._row_name, self._realizations)
+        return result
+
 
 class SMPSReader(object):
     
@@ -405,7 +431,41 @@ class SMPSReader(object):
     
     
     def _read_indep_section(self, stoch_file, last_read_line):
-        pass
+        fields = last_read_line.split()
+        if len(fields) > 1 and fields[1] != 'DISCRETE':
+            raise NotSupportedError('INDEP section type not supported', "SMPSReader only support DISCRETE INDEP section, received %s" % fields[1])
+        
+        line = stoch_file.readline()
+        fields = line.split()
+        while fields[0] not in _STOCH_FILE_SECTION_NAMES:
+            col_name = fields[0]
+            row_name = fields[1]
+            
+            column = self._column_by_name.get(col_name, None)
+            if column is None and col_name != self._rhs_name:
+                raise FormatError('Column not found', "Column '%s' was not found" % col_name)
+            row = self._row_by_name.get(row_name, None)
+            if row is None:
+                raise FormatError('Row not found', "Row %s was not found" % row_name)
+            
+            value = float(fields[2])
+            if len(fields) == 5:
+                period = fields[3]
+                prob = float(fields[4])
+            else:
+                prob = float(fields[3])
+            
+            indep = self._indeps_by_col_row.get((col_name, row_name), None)
+            if indep is None:
+                indep = Indep(col_name, row_name, period)
+                self._indeps.append(indep)
+                self._indeps_by_col_row[(col_name, row_name)] = indep
+            indep.add_realization(prob, value)
+            
+            line = stoch_file.readline()      
+            fields = line.split()
+        
+        return line
     
     
     def _read_block(self, stoch_file, line):
@@ -464,6 +524,8 @@ class SMPSReader(object):
             last_read_line = self._read_stoch_section(stoch_file)
             if last_read_line.startswith('INDEP'):
                 last_read_line = self._read_indep_section(stoch_file, last_read_line)
+                for i in self._indeps:
+                    print i
             if last_read_line.startswith('BLOCKS'):
                 last_read_line = self._read_blocks_section(stoch_file, last_read_line)
                 for b in self._blocks:
