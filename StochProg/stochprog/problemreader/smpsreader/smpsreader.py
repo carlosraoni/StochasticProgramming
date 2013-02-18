@@ -4,9 +4,9 @@ from sets import Set
 #TIME_FILE_PATH = '../../instances/assets.tim'
 #STOCH_FILE_PATH = '../../instances/assets.sto.small'
 
-CORE_FILE_PATH = '../../instances/env.cor'
-TIME_FILE_PATH = '../../instances/env.tim'
-STOCH_FILE_PATH = '../../instances/env.sto.1200'
+CORE_FILE_PATH = '../../../instances/env.cor'
+TIME_FILE_PATH = '../../../instances/env.tim'
+STOCH_FILE_PATH = '../../../instances/env.sto.1200'
 
 _STOCH_FILE_SECTION_NAMES = Set(['STOCH',
                                  'SIMPLE',
