@@ -1,5 +1,15 @@
 from sets import Set
 
+from stochprog.problemreader.smpsreader.column import Column
+from stochprog.problemreader.smpsreader.row import Row
+from stochprog.problemreader.smpsreader.row import RowType
+from stochprog.problemreader.smpsreader.period import Period
+from stochprog.problemreader.smpsreader.block import Block
+from stochprog.problemreader.smpsreader.indep import Indep
+from stochprog.problemreader.smpsreader.exception import FormatError
+from stochprog.problemreader.smpsreader.exception import NotSupportedError
+from stochprog.problemreader.smpsreader.exception import WrongFileError
+
 #CORE_FILE_PATH = '../../instances/assets.cor'
 #TIME_FILE_PATH = '../../instances/assets.tim'
 #STOCH_FILE_PATH = '../../instances/assets.sto.small'
@@ -21,181 +31,6 @@ _STOCH_FILE_SECTION_NAMES = Set(['STOCH',
                                  'DISTRIB',
                                  'ENDATA'])
 
-class Error(Exception):
-    
-    def __init__(self, msg):
-        self._message = msg
-        
-    def __str__(self):
-        return "[ERROR] %s\n" % str(self._message)
-        
-
-class FormatError(Error):
-    
-    def __init__(self, msg, reason = None):
-        self._message = msg
-        self._reason = reason
-        
-    def __str__(self):
-        ret = "[FORMAT_ERROR] %s\n" % str(self._message)
-        if(self._reason != None):
-            ret += "[REASON] %s\n" % str(self._reason)
-        return ret
-
-
-class WrongFileError(Error):
-    
-    def __init__(self, msg, reason = None):
-        self._message = msg
-        self._reason = reason
-        
-    def __str__(self):
-        ret = "[WRONG_FILE_ERROR] %s\n" % str(self._message)
-        if(self._reason != None):
-            ret += "[REASON] %s\n" % str(self._reason)
-        return ret
-
-
-class NotSupportedError(Error):
-    
-    def __init__(self, msg, reason = None):
-        self._message = msg
-        self._reason = reason
-        
-    def __str__(self):
-        ret = "[NOT_SUPPORTED_ERROR] %s\n" % str(self._message)
-        if(self._reason != None):
-            ret += "[REASON] %s\n" % str(self._reason)
-        return ret
-        
-
-class Column(object):
-    
-    def __init__(self, id, name):
-        self._id = id
-        self._name = name
-        
-    def get_id(self):
-        return self._id
-    
-    def get_name(self):
-        return self._name
-  
-        
-class RowType(object):
-    LT, LE, E, GE, GT, N = range(6)
-
-
-def _type_name_to_row_type(type_name):
-    return {'G': RowType.GE,
-            'L': RowType.LE,
-            'E': RowType.E,
-            'N': RowType.N}.get(type_name, None)
-
-
-class Row(object):
-    
-    def __init__(self, id, name, type):
-        self._id = id
-        self._name = name
-        self._type = type
-        
-        self._coefficients = {}
-        self._rhs = 0
-        self._rhs_name = ''
-        
-    def get_id(self):
-        return self._id
-        
-    def add_coef_to_column(self, column, coef):
-        self._coefficients[column] = coef
-        
-    def set_rhs(self, rhs_name, coef):
-        self._rhs_name = rhs_name
-        self._rhs = coef
-
-
-class Period(object):
-    
-    def __init__(self, name, column_range, row_range):
-        self._name = name
-        self._column_range = column_range
-        self._row_range = row_range
-        
-    def get_name(self):
-        return self._name
-        
-    def get_column_range(self):
-        return self._column_range
-    
-    def get_row_range(self):
-        return self._row_range
-
-
-class Block(object):
-    
-    def __init__(self, name, period):
-        self._name = name
-        self._period = period
-        self._coef_elements = [] # array of tuples of column row associations
-        self._coef_realizations = [] # array of realizations of coefficients of elements of coef_elements
-        self._realization_prob = [] # probability of each realization
-        
-    def get_name(self):
-        return self._name
-    
-    def get_period(self):
-        return self._period
-    
-    def get_coef_elements(self):
-        return self._coef_elements
-    
-    def set_coef_elements(self, coef_elements):
-        self._coef_elements = coef_elements
-        
-    def get_realizations(self):
-        return self._coef_realizations
-        
-    def add_realization(self, elements, prob, realization):
-        if elements != self._coef_elements:
-            raise FormatError('Wrong block specification', 'Elements of realization different from original block elements or in different order')
-        self._coef_realizations.append(realization)
-        self._realization_prob.append(prob)
-    
-    def get_realization_probabilities(self): 
-        return self._realization_prob
-        
-    def __str__(self):
-        result = "BLOCK %s (%s)\n" % (self._name, self._period)
-        result += "Realizations: %d\n" % len(self._coef_realizations)
-        result += "Probabilities: %s\n" % self._realization_prob
-        for i, ele in enumerate(self._coef_elements):
-            result += "(%s, %s) =" % (ele[0], ele[1])
-            for rea in self._coef_realizations:
-                result += " %.2f" % rea[i]
-            result += '\n'
-        return result   
-
-
-class Indep(object):
-    
-    def __init__(self, col_name, row_name, period):
-        self._col_name = col_name
-        self._row_name = row_name
-        self._period = period
-        self._realizations = [] # array of realizations of coefficients of elements of coef_elements
-        self._realization_prob = [] # probability of each realization
-        
-    def add_realization(self, prob, value):
-        self._realizations.append(value)
-        self._realization_prob.append(prob)
-        
-    def __str__(self):
-        result = "INDEP (%s,%s) (%s)\n" % (self._col_name, self._row_name, self._period)
-        result += "Realizations: %d\n" % len(self._realizations)
-        result += "Probabilities: %s\n" % self._realization_prob
-        result += "(%s, %s) = %s\n" % (self._col_name, self._row_name, self._realizations)
-        return result
 
 
 class SMPSReader(object):
@@ -245,7 +80,7 @@ class SMPSReader(object):
         while len(fields) >= 2:
             type_name = fields[0]
             name = fields[1]
-            type = _type_name_to_row_type(type_name)
+            type = RowType.type_name_to_row_type(type_name)
             if type is None:
                 raise FormatError('Wrong type name', "Invalid Type: %s" % type_name)
             row = Row(id, name, type)
