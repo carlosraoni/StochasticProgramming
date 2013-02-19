@@ -10,9 +10,9 @@ from stochprog.problemreader.smpsreader.exception import FormatError
 from stochprog.problemreader.smpsreader.exception import NotSupportedError
 from stochprog.problemreader.smpsreader.exception import WrongFileError
 
-#CORE_FILE_PATH = '../../instances/assets.cor'
-#TIME_FILE_PATH = '../../instances/assets.tim'
-#STOCH_FILE_PATH = '../../instances/assets.sto.small'
+#CORE_FILE_PATH = '../../../instances/assets.cor'
+#TIME_FILE_PATH = '../../../instances/assets.tim'
+#STOCH_FILE_PATH = '../../../instances/assets.sto.small'
 
 CORE_FILE_PATH = '../../../instances/env.cor'
 TIME_FILE_PATH = '../../../instances/env.tim'
