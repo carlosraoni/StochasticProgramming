@@ -99,6 +99,7 @@ class SMPSReader(object):
         
         return line
     
+    
     def _read_columns_section(self, core_file, last_read_line):
         fields = last_read_line.split()
         if len(fields) < 1:
