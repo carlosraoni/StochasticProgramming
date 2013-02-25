@@ -65,6 +65,26 @@ class SMPSReader(object):
         return self._obj
     
     
+    def get_blocks(self):
+        return self._blocks
+    
+    
+    def get_indeps(self):
+        return self._indeps
+    
+    
+    def get_rhs_name(self):
+        return self._rhs_name
+    
+    
+    def get_column_by_name(self, name):
+        return self._column_by_name.get(name, None)
+    
+    
+    def get_row_by_name(self, name):
+        return self._row_by_name.get(name, None)
+    
+    
     def get_columns_of_stage(self, stage):
         period = self._periods[stage - 1]
         col_range = period.get_column_range()

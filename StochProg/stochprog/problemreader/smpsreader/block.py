@@ -8,21 +8,27 @@ class Block(object):
         self._coef_elements = [] # array of tuples of column row associations
         self._coef_realizations = [] # array of realizations of coefficients of elements of coef_elements
         self._realization_prob = [] # probability of each realization
+     
         
     def get_name(self):
         return self._name
     
+    
     def get_period(self):
         return self._period
+    
     
     def get_coef_elements(self):
         return self._coef_elements
     
+    
     def set_coef_elements(self, coef_elements):
         self._coef_elements = coef_elements
+       
         
     def get_realizations(self):
         return self._coef_realizations
+     
         
     def add_realization(self, elements, prob, realization):
         if elements != self._coef_elements:
@@ -30,8 +36,18 @@ class Block(object):
         self._coef_realizations.append(realization)
         self._realization_prob.append(prob)
     
+    
     def get_realization_probabilities(self): 
         return self._realization_prob
+       
+       
+    def get_number_of_realizations(self):
+        return len(self._coef_realizations)
+    
+    
+    def get_realization(self, index):
+        return (self._realization_prob[index], self._coef_realizations[index]) 
+    
         
     def __str__(self):
         result = "BLOCK %s (%s)\n" % (self._name, self._period)
