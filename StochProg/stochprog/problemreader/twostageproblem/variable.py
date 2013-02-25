@@ -6,7 +6,7 @@ class VariableType(object):
     
 class Variable(object):
     
-    def __init__(self, id, name, cost, type, stage):
+    def __init__(self, id, name, cost, stage, type=VariableType.REAL):
         self._id = id
         self._name = name
         self._type = type

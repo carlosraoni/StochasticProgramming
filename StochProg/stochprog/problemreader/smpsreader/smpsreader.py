@@ -52,7 +52,37 @@ class SMPSReader(object):
         self._indeps = []
         self._indeps_by_col_row = {}        
     
+        
+    def get_columns(self):
+        return self._columns
+    
+    
+    def get_rows(self):
+        return self._rows
+    
+    
+    def get_objective_function(self):
+        return self._obj
+    
+    
+    def get_columns_of_stage(self, stage):
+        period = self._periods[stage - 1]
+        col_range = period.get_column_range()
+        cols = []
+        for i in range(col_range[0], col_range[1]):
+            cols.append(self._columns[i])
+        return cols
+    
+    
+    def get_rows_of_stage(self, stage):
+        period = self._periods[stage - 1]
+        row_range = period.get_row_range()
+        rows = []
+        for i in range(row_range[0], row_range[1]):
+            rows.append(self._rows[i])
+        return rows
 
+    
     def _read_name_section(self, core_file):
         line = core_file.readline()
         fields = line.split()
@@ -128,7 +158,7 @@ class SMPSReader(object):
                 row = self._row_by_name.get(row_name, None)
                 if row is None:
                     raise FormatError('Row not found', "Row %s was not found" % row_name)
-                row.add_coef_to_column(column, coef)
+                row.set_coef_to_column(column, coef)
             
             line = core_file.readline()
             fields = line.split()

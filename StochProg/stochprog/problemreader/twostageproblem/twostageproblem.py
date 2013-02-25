@@ -1,6 +1,7 @@
 import copy
 
-from stochprog.problemreader.twostageproblem.variable import Variable
+from stochprog.problemreader.twostageproblem.variable import Variable,\
+    VariableType
 from stochprog.problemreader.twostageproblem.constraint import Constraint
 from stochprog.problemreader.twostageproblem.realization import Realization
 from stochprog.problemreader.twostageproblem.scenario import Scenario
@@ -21,7 +22,7 @@ class TwoStageProblem(object):
         return self._scenarios 
     
         
-    def add_root_variable(self, name, cost, var_type, stage):
+    def add_root_variable(self, name, cost, stage, var_type=VariableType.REAL):
         var_id = len(self._root_scenario.get_variables())
         var = Variable(var_id, name, cost, var_type, stage)
         

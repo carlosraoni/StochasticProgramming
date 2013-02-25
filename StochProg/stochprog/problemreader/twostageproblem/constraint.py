@@ -3,7 +3,7 @@ class ConstraintType(object):
     LT, LE, E, GE, GT, N = range(6)
     
     @staticmethod
-    def get_constraint_type(type_name):
+    def get_constraint_type_by_name(type_name):
         return {'G': ConstraintType.GE,
                 'L': ConstraintType.LE,
                 'E': ConstraintType.E,
