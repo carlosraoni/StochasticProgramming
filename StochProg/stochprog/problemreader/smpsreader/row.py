@@ -30,6 +30,10 @@ class Row(object):
         return self._name
         
         
+    def get_type(self):
+        return self._type
+        
+        
     def set_coef_to_column(self, column, coef):
         self._coefficients[column] = coef
         

@@ -2,11 +2,25 @@
 from stochprog.problemreader.smpsreader.smpsreader import SMPSReader
 from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProblem
 
+#CORE_FILE_PATH = '../../instances/assets.cor'
+#TIME_FILE_PATH = '../../instances/assets.tim'
+#STOCH_FILE_PATH = '../../instances/assets.sto.small'
+
+CORE_FILE_PATH = '../../instances/env.cor'
+TIME_FILE_PATH = '../../instances/env.tim'
+STOCH_FILE_PATH = '../../instances/env.sto.1200'
+
+#CORE_FILE_PATH = '../../instances/airl.cor'
+#TIME_FILE_PATH = '../../instances/airl.tim'
+#STOCH_FILE_PATH = '../../instances/airl.sto.first'
+#STOCH_FILE_PATH = '../../instances/airl.sto.second'
+
+
 class SmpsToTwoStageBuilder(object):
     
     def __init__(self, core_file_path, time_file_path, stoch_file_path):
         self._smps_reader = SMPSReader(core_file_path, time_file_path, stoch_file_path)
-        self._two_stage_problem = TwoStageProblem()
+        self._two_stage_problem = None
                 
 
     def _add_vars_from_cols(self, var_by_col, obj, cols, stage):
@@ -23,7 +37,7 @@ class SmpsToTwoStageBuilder(object):
             constr_by_row[row] = constr_id        
 
 
-    def _create_scenario_from_realizations(self, realizations):
+    def _create_realization(self, realizations):
         probability = 1.0
         cost_changes = [] 
         coefficient_changes = [] 
@@ -38,23 +52,25 @@ class SmpsToTwoStageBuilder(object):
         self._two_stage_problem.add_realization(probability, cost_changes, coefficient_changes, rhs_changes)
     
     
-    def _create_scenarios(self, random_events, realizations):
+    def _create_scenario_realizations(self, random_events, realizations):
         n = len(random_events)
         prof = len(realizations)
         
         if n == prof:
-            self._create_scenario_from_realizations(realizations)
+            self._create_realization(realizations)
             return
         
         for realization in random_events[prof]:
             realizations.append(realization)
-            self._create_scenarios(random_events, realizations)
+            self._create_scenario_realizations(random_events, realizations)
             realizations.pop()
     
     
     def build_two_stage_instance(self):
         print 'Loading SMPS Files'
+        self._two_stage_problem = TwoStageProblem()
         self._smps_reader.read()
+        print 'Creating Core Scenario'
         
         # TODO: Use the TwoStageProblem class interface to build an instance from smps_reader data
         var_by_col = {}
@@ -73,7 +89,8 @@ class SmpsToTwoStageBuilder(object):
             
         self._add_constrs_from_rows(var_by_col, constr_by_row, first_stage_rows, 1)
         self._add_constrs_from_rows(var_by_col, constr_by_row, second_stage_rows, 2)
-
+        
+        print 'Generating Random Events'
         blocks = self._smps_reader.get_blocks()
         indeps = self._smps_reader.get_indeps()
         
@@ -94,9 +111,9 @@ class SmpsToTwoStageBuilder(object):
                     constr_id = constr_by_row.get(row, None)
                     if col_name == rhs_name: # rhs_change
                         rhs_changes.append((constr_id, coefs[i])) 
-                    elif row_name == obj.get_name: # cost change
+                    elif row_name == obj.get_name(): # cost change
                         cost_changes.append((var_id, coefs[i]))  
-                    else: # coef change
+                    else: # coef change                    
                         coefficient_changes.append((var_id, constr_id, coefs[i])) 
                 realizations.append((prob, cost_changes, coefficient_changes, rhs_changes))
             random_events.append(realizations)
@@ -111,9 +128,22 @@ class SmpsToTwoStageBuilder(object):
             
             if col_name == rhs_name: # rhs_change
                 random_events.append([(prob, [], [], [(constr_id, coef)]) for prob, coef in indep.get_realizations()]) 
-            elif row_name == obj.get_name: # cost change
+            elif row_name == obj.get_name(): # cost change
                 random_events.append([(prob, [(var_id, coef)], [], []) for prob, coef in indep.get_realizations()])  
             else: # coef change
                 random_events.append([(prob, [], [(var_id, constr_id, coef)], []) for prob, coef in indep.get_realizations()])
-            
-        self._create_scenarios(random_events, [])  
+        
+        print 'Generating Realizations'
+        self._create_scenario_realizations(random_events, [])
+        print 'Generating Scenarios'
+        self._two_stage_problem.generate_scenarios()
+         
+        return self._two_stage_problem 
+    
+    
+if __name__ == '__main__':
+    two_stage_builder = SmpsToTwoStageBuilder(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
+    two_stage_problem = two_stage_builder.build_two_stage_instance()
+    two_stage_problem.print_instance()
+    
+    

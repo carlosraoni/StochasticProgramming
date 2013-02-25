@@ -58,7 +58,7 @@ class TwoStageProblem(object):
         scen.set_probability(prob)
         scen.update_second_stage_costs()
         
-        for var_id, constr_id, coef in coefficient_changes:
+        for var_id, constr_id, coef in coefficient_changes:            
             scen.set_var_coef_in_constr(var_id, constr_id, coef)
         
         for constr_id, rhs in rhs_changes:
@@ -77,7 +77,16 @@ class TwoStageProblem(object):
             for constr in root_constr:
                 scen.add_constraint(copy.deepcopy(constr))
             self._apply_realization_to_scenario(scen, self._realizations[i - 1])
+            
+            print '.',
+            if (i + 1) % 40 == 0:
+                print ''
+            
             self._scenarios.append(scen)
-            
+        
+        print ''
         return self._scenarios
-            
+    
+    def print_instance(self):
+        print 'Num Scenarios', len(self._scenarios)
+        

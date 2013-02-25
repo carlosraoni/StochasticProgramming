@@ -14,9 +14,13 @@ from stochprog.problemreader.smpsreader.exception import WrongFileError
 #TIME_FILE_PATH = '../../../instances/assets.tim'
 #STOCH_FILE_PATH = '../../../instances/assets.sto.small'
 
-CORE_FILE_PATH = '../../../instances/env.cor'
-TIME_FILE_PATH = '../../../instances/env.tim'
-STOCH_FILE_PATH = '../../../instances/env.sto.1200'
+#CORE_FILE_PATH = '../../../instances/env.cor'
+#TIME_FILE_PATH = '../../../instances/env.tim'
+#STOCH_FILE_PATH = '../../../instances/env.sto.1200'
+
+CORE_FILE_PATH = '../../../instances/airl.cor'
+TIME_FILE_PATH = '../../../instances/airl.tim'
+STOCH_FILE_PATH = '../../../instances/airl.sto.first'
 
 _STOCH_FILE_SECTION_NAMES = Set(['STOCH',
                                  'SIMPLE',
