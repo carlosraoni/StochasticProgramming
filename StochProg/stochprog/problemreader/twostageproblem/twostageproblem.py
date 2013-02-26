@@ -24,7 +24,7 @@ class TwoStageProblem(object):
         
     def add_root_variable(self, name, cost, stage, var_type=VariableType.REAL):
         var_id = len(self._root_scenario.get_variables())
-        var = Variable(var_id, name, cost, var_type, stage)
+        var = Variable(var_id, name, cost, stage, var_type)
         
         self._root_scenario.set_var_coef(var)
         
@@ -33,7 +33,7 @@ class TwoStageProblem(object):
     
     def add_root_constraint(self, name, constr_type, vars_and_coefficients, rhs, stage):
         constr_id = len(self._root_scenario.get_constraints())
-        constr = Constraint(constr_id, name, constr_type, stage)
+        constr = Constraint(constr_id, name, stage, constr_type)
         constr.set_rhs(rhs)
         for var_id, coef in vars_and_coefficients:
             constr.set_var_coef(var_id, coef)

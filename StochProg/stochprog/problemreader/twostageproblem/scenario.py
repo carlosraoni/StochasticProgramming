@@ -15,6 +15,10 @@ class Scenario(object):
         return self._id
         
     
+    def get_var_cost(self, var):
+        return self._variables_by_id[var.get_id()].get_cost()
+    
+    
     def set_probability(self, prob):
         self._probability = prob
     
@@ -43,6 +47,10 @@ class Scenario(object):
         return self._constraints
     
     
+    def get_constraint_by_id(self, constr_id):
+        return self._constraints_by_id.get(constr_id, None)
+    
+    
     def set_constr_rhs(self, constr_id, rhs):
         constr = self._constraints_by_id[constr_id]
         constr.set_rhs(rhs)
@@ -57,3 +65,13 @@ class Scenario(object):
         var = self._variables_by_id[var_id]
         var.set_cost(cost) 
         
+        
+    def get_vars_from_stage(self, stage):
+        return [var for var in self._variables if var.get_stage() == stage]
+    
+    
+    def get_constrs_of_stage(self, stage):
+        return [constr for constr in self._constraints if constr.get_stage() == stage]
+        
+        
+    

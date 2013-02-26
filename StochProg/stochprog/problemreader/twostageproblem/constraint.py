@@ -12,7 +12,7 @@ class ConstraintType(object):
 
 class Constraint(object):
     
-    def __init__(self, id, name, type, stage):
+    def __init__(self, id, name, stage, type):
         self._id = id
         self._type = type
         self._name = name

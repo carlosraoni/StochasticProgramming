@@ -44,3 +44,8 @@ class Variable(object):
     
     def is_second_stage(self):
         return self._stage == 2
+    
+    
+    def __str__(self):
+        return "id: %s, name: %s, cost: %f, stage: %d" % (self._id, self._name, self._cost, self._stage)
+    

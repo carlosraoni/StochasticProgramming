@@ -1,0 +1,127 @@
+from coopr.pyomo import *
+from coopr.opt import SolverFactory
+
+from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProblem
+from stochprog.problemreader.smpstotwostagebuilder import SmpsToTwoStageBuilder
+from stochprog.problemreader.twostageproblem.constraint import ConstraintType
+
+CORE_FILE_PATH = '../../../instances/assets.cor'
+TIME_FILE_PATH = '../../../instances/assets.tim'
+STOCH_FILE_PATH = '../../../instances/assets.sto.small'
+
+#CORE_FILE_PATH = '../../../instances/airl.cor'
+#TIME_FILE_PATH = '../../../instances/airl.tim'
+#STOCH_FILE_PATH = '../../../instances/airl.sto.first'
+#STOCH_FILE_PATH = '../../../instances/airl.sto.second'
+
+class DeterministicEquivalent(object):
+    
+    def __init__(self, two_stage_instance):
+        self._instance = two_stage_instance
+        #self._instance = TwoStageProblem()
+    
+    
+    def create_model(self):
+        root_scenario = self._instance.get_root_scenario()        
+        first_stage_vars = root_scenario.get_vars_from_stage(1)
+        second_stage_vars = root_scenario.get_vars_from_stage(2)
+        scenarios = self._instance.get_scenarios()
+        
+        var_by_name = {}
+        var_by_id = {}
+        for var in root_scenario.get_variables():
+            var_by_name[var.get_name()] = var
+            var_by_id[var.get_id()] = var
+            
+        constr_by_name ={}
+        constr_by_id = {}
+        for constr in root_scenario.get_constraints():
+            constr_by_name[constr.get_name()] = constr
+            constr_by_id[constr.get_id()] = constr
+            
+        model = ConcreteModel()
+        model.x = Var([var.get_name() for var in first_stage_vars], within=NonNegativeReals)
+        model.y = Var(range(len(scenarios)), [var.get_name() for var in second_stage_vars], within=NonNegativeReals)
+        
+        def obj_rule(model):
+            expr = sum(var.get_cost() * model.x[var.get_name()] for var in first_stage_vars)
+            for scen in range(len(scenarios)):                
+                expr += sum(scenarios[scen].get_var_cost(var) * model.y[scen, var.get_name()] for var in second_stage_vars)             
+            return expr
+        model.obj = Objective(rule=obj_rule)
+        
+        def first_stage_constraints(model, constr_name):
+            constr = constr_by_name[constr_name]
+            
+            vars_and_coefs = []
+            for var_id, coef in constr.get_variables_and_coefficients():
+                var = var_by_id[var_id]
+                vars_and_coefs.append((var.get_name(), coef))
+            expr = sum(coef * model.x[var_name] for var_name, coef in vars_and_coefs)
+            
+            if constr.get_type() == ConstraintType.E:
+                return expr == constr.get_rhs()
+            elif constr.get_type() == ConstraintType.GE:
+                return expr >= constr.get_rhs()
+            elif constr.get_type() == ConstraintType.GT:
+                return expr > constr.get_rhs()
+            elif constr.get_type() == ConstraintType.LE:
+                return expr <= constr.get_rhs()
+            elif constr.get_type() == ConstraintType.LT:
+                return expr < constr.get_rhs()
+        model.constr_first_stage = Constraint([constr.get_name() for constr in root_scenario.get_constrs_of_stage(1)], 
+                                              rule=first_stage_constraints)
+        
+        def second_stage_constraints(model, scen, constr_name):
+            constr_id = constr_by_name[constr_name].get_id()
+            constr = scenarios[scen].get_constraint_by_id(constr_id)
+            
+            for i, (var_id, coef) in enumerate(constr.get_variables_and_coefficients()):
+                var = var_by_id[var_id]
+                if var.get_stage() == 1:
+                    if i == 0:
+                        expr = coef * model.x[var.get_name()]
+                    else:
+                        expr += coef * model.x[var.get_name()]
+                else:
+                    if i == 0:
+                        expr = coef * model.y[scen, var.get_name()]
+                    else:
+                        expr += coef * model.y[scen, var.get_name()]
+            
+            if constr.get_type() == ConstraintType.E:
+                return expr == constr.get_rhs()
+            elif constr.get_type() == ConstraintType.GE:
+                return expr >= constr.get_rhs()
+            elif constr.get_type() == ConstraintType.GT:
+                return expr > constr.get_rhs()
+            elif constr.get_type() == ConstraintType.LE:
+                return expr <= constr.get_rhs()
+            elif constr.get_type() == ConstraintType.LT:
+                return expr < constr.get_rhs()
+        model.constr_second_stage = Constraint(range(len(scenarios)), 
+                                               [constr.get_name() for constr in root_scenario.get_constrs_of_stage(2)],
+                                               rule=second_stage_constraints)
+        self._model = model
+        return model
+    
+    
+    def solve(self):
+        instance = self._model.create()
+        instance.pprint()
+        
+        opt = SolverFactory("glpk")
+        results = opt.solve(instance)
+        
+        results.write()
+        
+
+if __name__ == "__main__":    
+    two_stage_builder = SmpsToTwoStageBuilder(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
+    two_stage_problem = two_stage_builder.build_two_stage_instance()
+    
+    det_equiv = DeterministicEquivalent(two_stage_problem)
+    model = det_equiv.create_model()
+    
+    #model.pprint()
+    det_equiv.solve()
