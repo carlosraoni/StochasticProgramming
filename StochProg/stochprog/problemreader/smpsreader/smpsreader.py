@@ -115,7 +115,7 @@ class SMPSReader(object):
         if fields[0] != 'NAME':
             raise FormatError('Name section missing', 'Wrong name of the section')
         name = fields[1]
-        print 'NAME =', name
+        #print 'NAME =', name
         self._name = name
         
         return line
@@ -139,11 +139,11 @@ class SMPSReader(object):
                 raise FormatError('Wrong type name', "Invalid Type: %s" % type_name)
             row = Row(id, name, type)
             if type == RowType.N and self._obj is None:
-                print 'Objective Function =', name
+                #print 'Objective Function =', name
                 self._obj = row
             self._rows.append(row)
             self._row_by_name[name] = row
-            print 'Row[',id, ']:', type_name, name
+            #print 'Row[',id, ']:', type_name, name
             id = id + 1
             line = core_file.readline()
             fields = line.split()
@@ -172,13 +172,13 @@ class SMPSReader(object):
                 column = Column(id, column_name)
                 self._columns.append(column)
                 self._column_by_name[column_name] = column
-                print 'Column[', id, ']:', column_name
+                #print 'Column[', id, ']:', column_name
                 id = id + 1
             
             for i in range(1, len(fields), 2):
                 row_name = fields[i]
                 coef = float(fields[i+1])
-                print 'Coefficient of column', column_name, 'in row', row_name, '=', coef
+                #print 'Coefficient of column', column_name, 'in row', row_name, '=', coef
                 row = self._row_by_name.get(row_name, None)
                 if row is None:
                     raise FormatError('Row not found', "Row %s was not found" % row_name)
@@ -195,7 +195,7 @@ class SMPSReader(object):
         rhs_name = 'RHS'
         if len(fields) > 1:
             rhs_name = fields[1]
-        print 'RHS Name = ', rhs_name
+        #print 'RHS Name = ', rhs_name
         self._rhs_name = rhs_name
         
         line = core_file.readline()
@@ -205,7 +205,7 @@ class SMPSReader(object):
             for i in range(1, len(fields), 2):
                 row_name = fields[i]
                 coef = float(fields[i+1])
-                print 'Coefficient of rhs', rhs_name, 'in row', row_name, '=', coef
+                #print 'Coefficient of rhs', rhs_name, 'in row', row_name, '=', coef
                 row = self._row_by_name.get(row_name, None)
                 if row is None:
                     raise FormatError('Row not found', "Row %s was not found" % row_name)
@@ -236,7 +236,7 @@ class SMPSReader(object):
         if fields[0] != 'TIME':
             raise FormatError('Time section missing', 'Wrong name of the section')
         instance_name = fields[1]
-        print 'TIME =', instance_name
+        #print 'TIME =', instance_name
         if instance_name != self._name:
             raise WrongFileError('Time file for different problem instance', "Core file describes problem %s, while time file describes problem %s" % (self._name, instance_name))
         
@@ -273,7 +273,7 @@ class SMPSReader(object):
             period_names.append(period_name)
             column_indexes.append(column.get_id())
             row_indexes.append(row.get_id())
-            print 'Reading period col/row begins [', period_name, column_name, row_name, ']'
+            #print 'Reading period col/row begins [', period_name, column_name, row_name, ']'
             
             line = time_file.readline()
             fields = line.split()
@@ -292,7 +292,7 @@ class SMPSReader(object):
         for p in self._periods:
             column_range = p.get_column_range()
             row_range = p.get_row_range()
-            print 'Period', p.get_name(), '= col ', column_range, ', row', row_range 
+            #print 'Period', p.get_name(), '= col ', column_range, ', row', row_range 
         
         return line
     
@@ -312,7 +312,7 @@ class SMPSReader(object):
         if fields[0] != 'STOCH':
             raise FormatError('Stoch section missing', 'Wrong name of the section')
         instance_name = fields[1]
-        print 'STOCH =', instance_name
+        #print 'STOCH =', instance_name
         if instance_name != self._name:
             raise WrongFileError('Stoch file for different problem instance', "Core file describes problem %s, while stoch file describes problem %s" % (self._name, instance_name))
         
@@ -414,32 +414,30 @@ class SMPSReader(object):
             last_read_line = self._read_stoch_section(stoch_file)
             if last_read_line.startswith('INDEP'):
                 last_read_line = self._read_indep_section(stoch_file, last_read_line)
-                for i in self._indeps:
-                    print i
+                #for i in self._indeps:
+                #    print i
             if last_read_line.startswith('BLOCKS'):
                 last_read_line = self._read_blocks_section(stoch_file, last_read_line)
-                for b in self._blocks:
-                    print b
+                #for b in self._blocks:
+                #    print b
             if not last_read_line.startswith('ENDATA'):
                 print 'Ignoring next sections of time file. SMPSReader does not support the additional optional sections'
     
     
     def read(self):
+        print 'Loading SMPS Files'
+        print '\tReading core file: ', self._core_file_path
         self._read_core_file()
+        print '\tReading time file: ', self._time_file_path
         self._read_time_file()
+        print '\tReading stoch file: ', self._stoch_file_path
         self._read_stoch_file()
+        print ''
 
 
 if __name__ == '__main__':
-    try:
-        smps_reader = SMPSReader(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
-        smps_reader.read()
-    #except FormatError as  e:
-    #    print e
-    except NotSupportedError as e:
-        print e
-    except WrongFileError as e:
-        print e
+    smps_reader = SMPSReader(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
+    smps_reader.read()
     
     
     

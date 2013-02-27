@@ -67,10 +67,11 @@ class SmpsToTwoStageBuilder(object):
     
     
     def build_two_stage_instance(self):
-        print 'Loading SMPS Files'
         self._two_stage_problem = TwoStageProblem()
         self._smps_reader.read()
-        print 'Creating Core Scenario'
+        
+        print 'Generating Problem Instance'
+        print '\tCreating Core Scenario'
         
         # TODO: Use the TwoStageProblem class interface to build an instance from smps_reader data
         var_by_col = {}
@@ -90,7 +91,7 @@ class SmpsToTwoStageBuilder(object):
         self._add_constrs_from_rows(var_by_col, constr_by_row, first_stage_rows, 1)
         self._add_constrs_from_rows(var_by_col, constr_by_row, second_stage_rows, 2)
         
-        print 'Generating Random Events'
+        print '\tGenerating Random Events'
         blocks = self._smps_reader.get_blocks()
         indeps = self._smps_reader.get_indeps()
         
@@ -132,11 +133,14 @@ class SmpsToTwoStageBuilder(object):
                 random_events.append([(prob, [(var_id, coef)], [], []) for prob, coef in indep.get_realizations()])  
             else: # coef change
                 random_events.append([(prob, [], [(var_id, constr_id, coef)], []) for prob, coef in indep.get_realizations()])
-        
-        print 'Generating Realizations'
+                
         self._create_scenario_realizations(random_events, [])
-        print 'Generating Scenarios'
+        
+        print '\tGenerating Scenarios'
         self._two_stage_problem.generate_scenarios()
+        
+        print 'Total Number of Scenarios: ', len(self._two_stage_problem.get_scenarios())
+        print ''         
          
         return self._two_stage_problem 
     

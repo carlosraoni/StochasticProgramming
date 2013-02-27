@@ -70,6 +70,7 @@ class TwoStageProblem(object):
         root_vars = self._root_scenario.get_variables()
         root_constr = self._root_scenario.get_constraints()
         
+        print '\t',
         for i in xrange(n):
             scen = Scenario(i + 1)
             for var in root_vars:
@@ -80,7 +81,7 @@ class TwoStageProblem(object):
             
             print '.',
             if (i + 1) % 40 == 0:
-                print ''
+                print '\n\t',
             
             self._scenarios.append(scen)
         

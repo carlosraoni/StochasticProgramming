@@ -1,3 +1,5 @@
+import sys
+
 from coopr.pyomo import *
 from coopr.opt import SolverFactory
 
@@ -5,9 +7,13 @@ from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProb
 from stochprog.problemreader.smpstotwostagebuilder import SmpsToTwoStageBuilder
 from stochprog.problemreader.twostageproblem.constraint import ConstraintType
 
-CORE_FILE_PATH = '../../../instances/assets.cor'
-TIME_FILE_PATH = '../../../instances/assets.tim'
-STOCH_FILE_PATH = '../../../instances/assets.sto.small'
+#CORE_FILE_PATH = '../../../instances/assets.cor'
+#TIME_FILE_PATH = '../../../instances/assets.tim'
+#STOCH_FILE_PATH = '../../../instances/assets.sto.small'
+
+CORE_FILE_PATH = '../../../instances/env.cor'
+TIME_FILE_PATH = '../../../instances/env.tim'
+STOCH_FILE_PATH = '../../../instances/env.sto.1200'
 
 #CORE_FILE_PATH = '../../../instances/airl.cor'
 #TIME_FILE_PATH = '../../../instances/airl.tim'
@@ -22,6 +28,8 @@ class DeterministicEquivalent(object):
     
     
     def create_model(self):
+        print 'Creating Deterministic Equivalent Model'
+        
         root_scenario = self._instance.get_root_scenario()        
         first_stage_vars = root_scenario.get_vars_from_stage(1)
         second_stage_vars = root_scenario.get_vars_from_stage(2)
@@ -103,20 +111,40 @@ class DeterministicEquivalent(object):
                                                [constr.get_name() for constr in root_scenario.get_constrs_of_stage(2)],
                                                rule=second_stage_constraints)
         self._model = model
+        self._det_equiv_instance = self._model.create()        
+        #instance.pprint()
+        
+        print '\tNumber of Variables:', (len(model.x) + len(model.y))
+        print '\tNumber of Constraints:', (len(model.constr_first_stage) + len(model.constr_second_stage))
+        print ''
+        
         return model
     
     
-    def solve(self):
-        instance = self._model.create()
-        instance.pprint()
+    def solve(self, solver_name='glpk'):
+        print 'Solving Deterministic Equivalent Model'        
+        opt = SolverFactory(solver_name)
+        results = opt.solve(self._det_equiv_instance)
         
-        opt = SolverFactory("glpk")
-        results = opt.solve(instance)
-        
-        results.write()
-        
+        #results.write()
+        print '\tOptimal Solution: ', results.solution[0].objective['obj']['value']
+        print ''
 
-if __name__ == "__main__":    
+def _main(argv):  
+    print 'Arguments:', argv
+    if len(argv) < 5:
+        print 'Error: missing command line arguments'
+        print 'Specify: files_directory_path core_file time_file stoch_file'        
+        return
+        
+    dir_path = argv[1]
+    if not dir_path.endswith('/'):
+        dir_path += '/'
+    
+    CORE_FILE_PATH = dir_path + argv[2]
+    TIME_FILE_PATH = dir_path + argv[3]
+    STOCH_FILE_PATH = dir_path + argv[4]
+        
     two_stage_builder = SmpsToTwoStageBuilder(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
     two_stage_problem = two_stage_builder.build_two_stage_instance()
     
@@ -125,3 +153,11 @@ if __name__ == "__main__":
     
     #model.pprint()
     det_equiv.solve()
+
+
+if __name__ == "__main__":
+    _main(sys.argv)
+    
+    
+    
+    
