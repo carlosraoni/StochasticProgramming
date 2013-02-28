@@ -1,0 +1,20 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/posts/storm/', 'stormG2.cor', 'stormG2.tim', 'stormG2_27.sto']
+Loading SMPS Files
+	Reading core file:  instances/posts/storm/stormG2.cor
+	Reading time file:  instances/posts/storm/stormG2.tim
+	Reading stoch file:  instances/posts/storm/stormG2_27.sto
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . 
+Total Number of Scenarios:  27
+
+Creating Deterministic Equivalent Model
+	Number of Variables: 34114
+	Number of Constraints: 14387
+
+Solving Deterministic Equivalent Model
+	Optimal Solution:  15508982.3055
+

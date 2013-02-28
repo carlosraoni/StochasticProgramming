@@ -202,6 +202,7 @@ class SMPSReader(object):
         fields = line.split()
         while len(fields) >= 3:
             rhs_name = fields[0]
+            self._rhs_name = rhs_name
             for i in range(1, len(fields), 2):
                 row_name = fields[i]
                 coef = float(fields[i+1])
@@ -237,8 +238,8 @@ class SMPSReader(object):
             raise FormatError('Time section missing', 'Wrong name of the section')
         instance_name = fields[1]
         #print 'TIME =', instance_name
-        if instance_name != self._name:
-            raise WrongFileError('Time file for different problem instance', "Core file describes problem %s, while time file describes problem %s" % (self._name, instance_name))
+        #if instance_name != self._name:
+        #    raise WrongFileError('Time file for different problem instance', "Core file describes problem %s, while time file describes problem %s" % (self._name, instance_name))
         
         return line
     
@@ -316,8 +317,8 @@ class SMPSReader(object):
             raise FormatError('Stoch section missing', 'Wrong name of the section')
         instance_name = fields[1]
         #print 'STOCH =', instance_name
-        if instance_name != self._name:
-            raise WrongFileError('Stoch file for different problem instance', "Core file describes problem %s, while stoch file describes problem %s" % (self._name, instance_name))
+        #if instance_name != self._name:
+        #    raise WrongFileError('Stoch file for different problem instance', "Core file describes problem %s, while stoch file describes problem %s" % (self._name, instance_name))
         
         line = stoch_file.readline()
         return line

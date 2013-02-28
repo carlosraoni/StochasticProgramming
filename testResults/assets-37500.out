@@ -1,0 +1,33 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/slptestset/assets/', 'assets.cor', 'assets.tim', 'assets.sto.large']
+Loading SMPS Files
+	Reading core file:  instances/slptestset/assets/assets.cor
+	Reading time file:  instances/slptestset/assets/assets.tim
+	Reading stoch file:  instances/slptestset/assets/assets.sto.large
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . ('  Signal handler called from ', '/usr/lib/python2.7/copy.py', 'deepcopy', 192)
+('  Waiting...',)
+('  Signal', 2, 'recieved, but no process queued')
+  Exiting now

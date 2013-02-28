@@ -26,7 +26,7 @@ class TwoStageProblem(object):
         var_id = len(self._root_scenario.get_variables())
         var = Variable(var_id, name, cost, stage, var_type)
         
-        self._root_scenario.set_var_coef(var)
+        self._root_scenario.add_var(var)
         
         return var_id
     
@@ -74,7 +74,7 @@ class TwoStageProblem(object):
         for i in xrange(n):
             scen = Scenario(i + 1)
             for var in root_vars:
-                scen.set_var_coef(copy.deepcopy(var))
+                scen.add_var(copy.deepcopy(var))
             for constr in root_constr:
                 scen.add_constraint(copy.deepcopy(constr))
             self._apply_realization_to_scenario(scen, self._realizations[i - 1])

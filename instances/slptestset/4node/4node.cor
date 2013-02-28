@@ -11,9 +11,6 @@ ROWS
  E  CYB1
  E  CYC0
  E  CYC1
-* Removed so A will be full row rank
-* E  CYE0
-* E  CYE1
  L  MXFH0
  L  MXFH1
  G  MNFH0
@@ -98,7 +95,6 @@ COLUMNS
     X0.0      PB0A      -8.0           OBJ       50.0
     X1.0      MLA       0.0            MLB       1.0
     X1.0      MLE       1.0            CYA0      1.0
-*    X1.0      CYE0      -1.0
     X1.0      MXFH0     13.0           MNFH0     13.0
     X1.0      PB1A      -8.0           OBJ       65.0
     X2.0      MLA       0.0            MLB       1.0
@@ -111,7 +107,6 @@ COLUMNS
     X3.0      PB3A      -8.0           OBJ       70.0
     X4.0      MLA       0.0            MLC       1.0
     X4.0      MLE       1.0            CYA0      1.0
-*    X4.0      CYE0      -1.0
     X4.0      MXFH0     12.0           MNFH0     12.0
     X4.0      PB4A      -8.0           OBJ       60.0
     X5.0      MLA       0.0            MLC       1.0
@@ -138,7 +133,6 @@ COLUMNS
     X10.0     MLB       0.0            MLC       1.0
     X10.0     MLE       1.0
     X10.0     CYB0      1.0            
-*    X10.0     CYE0      -1.0
     X10.0     MXFH0     9.0            MNFH0     9.0
     X10.0     PB10B     -8.0           OBJ       45.0
     X11.0     MLB       1.0            MLE       1.0
@@ -154,13 +148,11 @@ COLUMNS
     X13.0     PB13E     -8.0           OBJ       50.0
     X14.0     MLE       0.0            MLC       1.0
     X14.0     MLB       1.0            
-*    X14.0     CYE0      1.0
     X14.0     CYB0      -1.0
     X14.0     MXFH0     9.0            MNFH0     9.0
     X14.0     PB14E     -8.0           OBJ       45.0
     X15.0     MLE       0.0            MLC       1.0
     X15.0     MLA       1.0            CYA0      -1.0
-*    X15.0     CYE0      1.0
     X15.0     MXFH0     12.0           MNFH0     12.0
     X15.0     PB15E     -8.0           OBJ       60.0
     X16.0     MLE       1.0            MLB       1.0
@@ -168,13 +160,11 @@ COLUMNS
     X16.0     PB16E     -8.0           OBJ       80.0
     X17.0     MLE       0.0            MLB       1.0
     X17.0     MLC       1.0            
-*    X17.0     CYE0      1.0
     X17.0     CYC0      -1.0
     X17.0     MXFH0     12.0           MNFH0     12.0
     X17.0     PB17E     -8.0           OBJ       60.0
     X18.0     MLE       0.0            MLB       1.0
     X18.0     MLA       1.0            CYA0      -1.0
-*    X18.0     CYE0      1.0
     X18.0     MXFH0     13.0           MNFH0     13.0
     X18.0     PB18E     -8.0           OBJ       65.0
     X19.0     MLC       1.0            MLA       1.0
@@ -195,7 +185,6 @@ COLUMNS
     X22.0     PB22C     -8.0           OBJ       45.0
     X23.0     MLC       0.0            MLB       1.0
     X23.0     MLE       1.0            CYC0      1.0
-*    X23.0     CYE0      -1.0
     X23.0     MXFH0     12.0           MNFH0     12.0
     X23.0     PB23C     -8.0           OBJ       60.0
     X24.0     MLC       1.0            MLE       1.0
@@ -211,7 +200,6 @@ COLUMNS
     X0.1      PB0A      -6.0           OBJ       60.0
     X1.1      MLA       0.0            MLB       1.0
     X1.1      MLE       1.0            CYA1      1.0
-*    X1.1      CYE1      -1.0
     X1.1      MXFH1     15.6           MNFH1     15.6
     X1.1      PB1A      -6.0           OBJ       62.4
     X2.1      MLA       0.0            MLB       1.0
@@ -224,7 +212,6 @@ COLUMNS
     X3.1      PB3A      -6.0           OBJ       67.2
     X4.1      MLA       0.0            MLC       1.0
     X4.1      MLE       1.0            CYA1      1.0
-*    X4.1      CYE1      -1.0
     X4.1      MXFH1     14.4           MNFH1     14.4
     X4.1      PB4A      -6.0           OBJ       57.6
     X5.1      MLA       0.0            MLC       1.0
@@ -251,7 +238,6 @@ COLUMNS
     X10.1     MLB       0.0            MLC       1.0
     X10.1     MLE       1.0
     X10.1     CYB1      1.0            
-*    X10.1     CYE1      -1.0
     X10.1     MXFH1     10.8           MNFH1     10.8
     X10.1     PB10B     -6.0           OBJ       43.2
     X11.1     MLB       1.0            MLE       1.0
@@ -267,13 +253,11 @@ COLUMNS
     X13.1     PB13E     -6.0           OBJ       48.0
     X14.1     MLE       0.0            MLC       1.0
     X14.1     MLB       1.0            
-*    X14.1     CYE1      1.0
     X14.1     CYB1      -1.0
     X14.1     MXFH1     10.8           MNFH1     10.8
     X14.1     PB14E     -6.0           OBJ       43.2
     X15.1     MLE       0.0            MLC       1.0
     X15.1     MLA       1.0            CYA1      -1.0
-*    X15.1     CYE1      1.0
     X15.1     MXFH1     14.4           MNFH1     14.4
     X15.1     PB15E     -6.0           OBJ       57.6
     X16.1     MLE       1.0            MLB       1.0
@@ -281,13 +265,11 @@ COLUMNS
     X16.1     PB16E     -6.0           OBJ       76.8
     X17.1     MLE       0.0            MLB       1.0
     X17.1     MLC       1.0            
-*    X17.1     CYE1      1.0
     X17.1     CYC1      -1.0
     X17.1     MXFH1     14.4           MNFH1     14.4
     X17.1     PB17E     -6.0           OBJ       57.6
     X18.1     MLE       0.0            MLB       1.0
     X18.1     MLA       1.0            CYA1      -1.0
-*    X18.1     CYE1      1.0
     X18.1     MXFH1     15.6           MNFH1     15.6
     X18.1     PB18E     -6.0           OBJ       62.4
     X19.1     MLC       2.0            MLA       1.0
@@ -308,7 +290,6 @@ COLUMNS
     X22.1     PB22C     -6.0           OBJ       43.2
     X23.1     MLC       0.0            MLB       1.0
     X23.1     MLE       1.0            CYC1      1.0
-*    X23.1     CYE1      -1.0
     X23.1     MXFH1     14.4           MNFH1     14.4
     X23.1     PB23C     -6.0           OBJ       57.6
     X24.1     MLC       0.0            MLE       1.0

@@ -84,6 +84,7 @@ class DeterministicEquivalent(object):
             constr_id = constr_by_name[constr_name].get_id()
             constr = scenarios[scen].get_constraint_by_id(constr_id)
             
+            expr = None
             for i, (var_id, coef) in enumerate(constr.get_variables_and_coefficients()):
                 var = var_by_id[var_id]
                 if var.get_stage() == 1:
@@ -96,6 +97,9 @@ class DeterministicEquivalent(object):
                         expr = coef * model.y[scen, var.get_name()]
                     else:
                         expr += coef * model.y[scen, var.get_name()]
+            
+            if expr is None:
+                return Constraint.Skip
             
             if constr.get_type() == ConstraintType.E:
                 return expr == constr.get_rhs()
@@ -164,7 +168,8 @@ def _main(argv):
     model = det_equiv.create_model()
     
     #model.pprint()
-    det_equiv.solve('cbc')
+    #det_equiv.solve('cbc')
+    det_equiv.solve('cplex')
     #det_equiv.solve()
 
 

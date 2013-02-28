@@ -1,0 +1,21 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/slptestset/4node/', '4node.cor.base', '4node.tim', '4node.sto.64']
+Loading SMPS Files
+	Reading core file:  instances/slptestset/4node/4node.cor.base
+	Reading time file:  instances/slptestset/4node/4node.tim
+	Reading stoch file:  instances/slptestset/4node/4node.sto.64
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . 
+Total Number of Scenarios:  64
+
+Creating Deterministic Equivalent Model
+	Number of Variables: 11956
+	Number of Constraints: 4752
+
+Solving Deterministic Equivalent Model
+	Optimal Solution:  416.6
+

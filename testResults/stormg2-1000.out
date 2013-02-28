@@ -1,0 +1,43 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/posts/storm/', 'stormG2.cor', 'stormG2.tim', 'stormG2_1000.sto']
+Loading SMPS Files
+	Reading core file:  instances/posts/storm/stormG2.cor
+	Reading time file:  instances/posts/storm/stormG2.tim
+	Reading stoch file:  instances/posts/storm/stormG2_1000.sto
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+	
+Total Number of Scenarios:  1000
+
+Creating Deterministic Equivalent Model
+('  Signal handler called from ', '/usr/local/lib/python2.7/dist-packages/coopr/pyomo/preprocess/compute_canonical_repn.py', 'preprocess_constraint', 96)
+('  Waiting...',)
+('  Signal', 2, 'recieved, but no process queued')
+  Exiting now

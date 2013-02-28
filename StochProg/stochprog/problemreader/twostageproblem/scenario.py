@@ -29,7 +29,7 @@ class Scenario(object):
                 var.set_cost(var.get_cost() * self._probability)
     
     
-    def set_var_coef(self, var):
+    def add_var(self, var):
         self._variables.append(var)
         self._variables_by_id[var.get_id()] = var
     
