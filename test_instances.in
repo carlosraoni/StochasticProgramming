@@ -1,0 +1,13 @@
+fxm6  instances/posts/fxm/ fxm.cor fxm2.tim fxm2_6.sto
+fxm16 instances/posts/fxm/ fxm.cor fxm2.tim fxm2_16.sto
+
+fxmev instances/posts/fxm/ fxm.cor fxm2.tim fxmev.sto
+
+pltexpa6  instances/posts/pltexp/ pltexpA2.cor pltexpA2.tim pltexpA2_6.sto
+pltexpa16 instances/posts/pltexp/ pltexpA2.cor pltexpA2.tim pltexpA2_16.sto
+
+airl-first instances/slptestset/airl/ AIRL.cor AIRL.tim AIRL.sto.first
+
+env1200 instances/slptestset/env/ env.cor env.tim env.sto.1200
+
+

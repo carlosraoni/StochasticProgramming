@@ -124,10 +124,22 @@ class DeterministicEquivalent(object):
     def solve(self, solver_name='glpk'):
         print 'Solving Deterministic Equivalent Model'        
         opt = SolverFactory(solver_name)
-        results = opt.solve(self._det_equiv_instance)
+        results = opt.solve(self._det_equiv_instance)        
+        self._det_equiv_instance.load(results)
+        model = self._det_equiv_instance
+        
+        root_scenario = self._instance.get_root_scenario()        
+        first_stage_vars = root_scenario.get_vars_from_stage(1)
+        second_stage_vars = root_scenario.get_vars_from_stage(2)
+        scenarios = self._instance.get_scenarios()
+        
+        obj_value = sum(var.get_cost() * model.x[var.get_name()].value for var in first_stage_vars)
+        for scen in range(len(scenarios)):                
+            obj_value += sum(scenarios[scen].get_var_cost(var) * model.y[scen, var.get_name()].value for var in second_stage_vars)
         
         #results.write()
-        print '\tOptimal Solution: ', results.solution[0].objective['obj']['value']
+        #print '\tOptimal Solution: ', results.solution(0).objective["obj"]["value"]
+        print '\tOptimal Solution: ', obj_value
         print ''
 
 def _main(argv):  
@@ -152,7 +164,8 @@ def _main(argv):
     model = det_equiv.create_model()
     
     #model.pprint()
-    det_equiv.solve()
+    det_equiv.solve('cbc')
+    #det_equiv.solve()
 
 
 if __name__ == "__main__":

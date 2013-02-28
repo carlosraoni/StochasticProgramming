@@ -272,7 +272,10 @@ class SMPSReader(object):
             
             period_names.append(period_name)
             column_indexes.append(column.get_id())
-            row_indexes.append(row.get_id())
+            if row.get_id() == 0: # Assuming that objective function is the first row
+                row_indexes.append(1) # skip objective function
+            else:
+                row_indexes.append(row.get_id())
             #print 'Reading period col/row begins [', period_name, column_name, row_name, ']'
             
             line = time_file.readline()
@@ -338,6 +341,7 @@ class SMPSReader(object):
             if row is None:
                 raise FormatError('Row not found', "Row %s was not found" % row_name)
             
+            period = None
             value = float(fields[2])
             if len(fields) == 5:
                 period = fields[3]
@@ -387,6 +391,7 @@ class SMPSReader(object):
             fields = line.split()
             
         return (name, period, elements, prob, realization, line) 
+    
     
     def _read_blocks_section(self, stoch_file, last_read_line):
         fields = last_read_line.split()

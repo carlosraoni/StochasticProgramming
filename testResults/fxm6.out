@@ -1,0 +1,20 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/posts/fxm/', 'fxm.cor', 'fxm2.tim', 'fxm2_6.sto']
+Loading SMPS Files
+	Reading core file:  instances/posts/fxm/fxm.cor
+	Reading time file:  instances/posts/fxm/fxm2.tim
+	Reading stoch file:  instances/posts/fxm/fxm2_6.sto
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. . . . . . 
+Total Number of Scenarios:  6
+
+Creating Deterministic Equivalent Model
+	Number of Variables: 2172
+	Number of Constraints: 1520
+
+Solving Deterministic Equivalent Model
+	Optimal Solution:  18417.0652429
+

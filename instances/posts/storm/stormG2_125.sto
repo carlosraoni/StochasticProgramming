@@ -1,4 +1,4 @@
-STOCH         storm
+STOCH         Prob_2
 BLOCKS        DISCRETE
  BL BLOCK1    PERIOD2       0.2
     RHS       R0000102     336.80000
