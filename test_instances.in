@@ -70,13 +70,35 @@ env-first 5 instances/slptestset/env/ env.cor env.tim env.sto.first
 
 env-loose 5 instances/slptestset/env/ env.cor env.tim env.sto.loose
 
-env 15 instances/slptestset/env/ env.cor env.tim env.sto.imp
-env 1200 instances/slptestset/env/ env.cor env.tim env.sto.1200
-env 1875 instances/slptestset/env/ env.cor env.tim env.sto.1875
-env 3780 instances/slptestset/env/ env.cor env.tim env.sto.3780
-#env 5292 instances/slptestset/env/ env.cor env.tim env.sto.5292
+env 15    instances/slptestset/env/ env.cor env.tim env.sto.imp
+env 1200  instances/slptestset/env/ env.cor env.tim env.sto.1200
+env 1875  instances/slptestset/env/ env.cor env.tim env.sto.1875
+env 3780  instances/slptestset/env/ env.cor env.tim env.sto.3780
+#env 5292  instances/slptestset/env/ env.cor env.tim env.sto.5292
+#env 8232  instances/slptestset/env/ env.cor env.tim env.sto.lrge
+#env 32928 instances/slptestset/env/ env.cor env.tim env.sto.xlrge
 
+env-diss-aggr 5 instances/slptestset/env/ env.cor.diss env.tim env.sto.aggr
 
+env-diss-first 5 instances/slptestset/env/ env.cor.diss env.tim env.sto.first
+
+env-diss-loose 5 instances/slptestset/env/ env.cor.diss env.tim env.sto.loose
+
+env-diss 15    instances/slptestset/env/ env.cor.diss env.tim env.sto.imp
+env-diss 1200  instances/slptestset/env/ env.cor.diss env.tim env.sto.1200
+env-diss 1875  instances/slptestset/env/ env.cor.diss env.tim env.sto.1875
+env-diss 3780  instances/slptestset/env/ env.cor.diss env.tim env.sto.3780
+#env-diss 5292  instances/slptestset/env/ env.cor.diss env.tim env.sto.5292
+#env-diss 8232  instances/slptestset/env/ env.cor.diss env.tim env.sto.lrge
+#env-diss 32928 instances/slptestset/env/ env.cor.diss env.tim env.sto.xlrge
+
+phone1 1 instances/slptestset/phone/ phone.cor phone.tim phone.sto.1
+
+#phone 32768 instances/slptestset/phone/ phone.cor phone.tim phone.sto
+
+stocfor1 1 instances/slptestset/stocfor1/ stocfor1.cor stocfor1.tim stocfor1.sto
+
+stocfor2 64 instances/slptestset/stocfor2/ stocfor2.cor stocfor2.tim stocfor2.sto
 
 
 

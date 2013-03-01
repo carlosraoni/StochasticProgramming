@@ -1,0 +1,20 @@
+Arguments: ['StochProg/stochprog/algorithms/twostage/deterministicequivalent.py', 'instances/slptestset/stocfor1/', 'stocfor1.cor', 'stocfor1.tim', 'stocfor1.sto']
+Loading SMPS Files
+	Reading core file:  instances/slptestset/stocfor1/stocfor1.cor
+	Reading time file:  instances/slptestset/stocfor1/stocfor1.tim
+	Reading stoch file:  instances/slptestset/stocfor1/stocfor1.sto
+
+Generating Problem Instance
+	Creating Core Scenario
+	Generating Random Events
+	Generating Scenarios
+	. 
+Total Number of Scenarios:  1
+
+Creating Deterministic Equivalent Model
+	Number of Variables: 111
+	Number of Constraints: 117
+
+Solving Deterministic Equivalent Model
+	Optimal Solution:  -41131.9832324
+

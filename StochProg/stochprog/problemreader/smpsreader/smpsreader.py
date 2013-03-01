@@ -222,10 +222,10 @@ class SMPSReader(object):
         with open(self._core_file_path) as core_file:
             self._read_name_section(core_file)
             last_read_line = self._read_rows_section(core_file)
-            last_read_line = self._read_columns_section(core_file, last_read_line)
-            if last_read_line.startswith('RHS'):
+            last_read_line = self._read_columns_section(core_file, last_read_line)            
+            if last_read_line.strip().startswith('RHS'):                
                 last_read_line = self._read_rhs_section(core_file, last_read_line)
-            if not last_read_line.startswith('ENDATA'):
+            if not last_read_line.strip().startswith('ENDATA'):                
                 print 'Ignoring next sections. SMPSReader does not support the additional optional sections'
     
     
@@ -304,7 +304,7 @@ class SMPSReader(object):
         with open(self._time_file_path) as time_file:
             self._read_time_section(time_file)
             last_read_line = self._read_periods_section(time_file)
-            if not last_read_line.startswith('ENDATA'):
+            if not last_read_line.strip().startswith('ENDATA'):
                 print 'Ignoring next sections of time file. SMPSReader does not support the additional optional sections'
                 
                             
@@ -418,15 +418,15 @@ class SMPSReader(object):
     def _read_stoch_file(self):
         with open(self._stoch_file_path) as stoch_file:
             last_read_line = self._read_stoch_section(stoch_file)
-            if last_read_line.startswith('INDEP'):
+            if last_read_line.strip().startswith('INDEP'):
                 last_read_line = self._read_indep_section(stoch_file, last_read_line)
                 #for i in self._indeps:
                 #    print i
-            if last_read_line.startswith('BLOCKS'):
+            if last_read_line.strip().startswith('BLOCKS'):
                 last_read_line = self._read_blocks_section(stoch_file, last_read_line)
                 #for b in self._blocks:
                 #    print b
-            if not last_read_line.startswith('ENDATA'):
+            if not last_read_line.strip().startswith('ENDATA'):
                 print 'Ignoring next sections of time file. SMPSReader does not support the additional optional sections'
     
     

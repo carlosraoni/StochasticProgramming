@@ -116,7 +116,7 @@ class DeterministicEquivalent(object):
                                                rule=second_stage_constraints)
         self._model = model
         self._det_equiv_instance = self._model.create()        
-        #instance.pprint()
+        #self._det_equiv_instance.pprint()
         
         print '\tNumber of Variables:', (len(model.x) + len(model.y))
         print '\tNumber of Constraints:', (len(model.constr_first_stage) + len(model.constr_second_stage))
@@ -137,12 +137,21 @@ class DeterministicEquivalent(object):
         second_stage_vars = root_scenario.get_vars_from_stage(2)
         scenarios = self._instance.get_scenarios()
         
+        # Print variables with cost in objective function
+#        for var in first_stage_vars:
+#            if var.get_cost() != 0.0:
+#                print var.get_name(), " = " , model.x[var.get_name()].value, " * ", var.get_cost()
+#        for scen in range(len(scenarios)):
+#            for var in second_stage_vars:
+#                if scenarios[scen].get_var_cost(var) != 0.0:
+#                    print var.get_name(), " = ", model.y[scen, var.get_name()].value, " * ", scenarios[scen].get_var_cost(var) 
+            
+        
         obj_value = sum(var.get_cost() * model.x[var.get_name()].value for var in first_stage_vars)
         for scen in range(len(scenarios)):                
             obj_value += sum(scenarios[scen].get_var_cost(var) * model.y[scen, var.get_name()].value for var in second_stage_vars)
         
         #results.write()
-        #print '\tOptimal Solution: ', results.solution(0).objective["obj"]["value"]
         print '\tOptimal Solution: ', obj_value
         print ''
 

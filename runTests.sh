@@ -30,7 +30,7 @@ do
 				./runSmpsTwoStageSolver.sh $dir $core $time $stoch > $outfile
 		
 				obj=`cat $outfile | grep Optimal | cut -d ' ' -f 4`
-				echo "Optimal Solution: $obj"
+				echo "$name $scen: $obj"
 				echo ""
 				last_instance=$name
 			fi
