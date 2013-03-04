@@ -6,11 +6,10 @@ class VariableType(object):
     
 class Variable(object):
     
-    def __init__(self, id, name, cost, stage, type=VariableType.REAL):
+    def __init__(self, id, name, stage, type=VariableType.REAL):
         self._id = id
         self._name = name
-        self._type = type
-        self._cost = cost
+        self._type = type        
         self._stage = stage
         
         
@@ -20,10 +19,6 @@ class Variable(object):
     
     def get_name(self):
         return self._name
-    
-    
-    def get_cost(self):
-        return self._cost
         
     
     def get_type(self):
@@ -33,10 +28,6 @@ class Variable(object):
     def get_stage(self):
         return self._stage
     
-    
-    def set_cost(self, cost):
-        self._cost = cost
-        
 
     def is_first_stage(self):
         return self._stage == 1

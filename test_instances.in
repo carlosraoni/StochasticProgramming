@@ -9,7 +9,7 @@ pltexpa 16 instances/posts/pltexp/ pltexpA2.cor pltexpA2.tim pltexpA2_16.sto
 stormg2 8    instances/posts/storm/ stormG2.cor stormG2.tim stormG2_8.sto
 stormg2 27   instances/posts/storm/ stormG2.cor stormG2.tim stormG2_27.sto
 stormg2 125  instances/posts/storm/ stormG2.cor stormG2.tim stormG2_125.sto
-#stormg2 1000 instances/posts/storm/ stormG2.cor stormG2.tim stormG2_1000.sto
+stormg2 1000 instances/posts/storm/ stormG2.cor stormG2.tim stormG2_1000.sto
 
 airl-first 25 instances/slptestset/airl/ AIRL.cor AIRL.tim AIRL.sto.first
 
@@ -18,7 +18,7 @@ airl-second 25 instances/slptestset/airl/ AIRL.cor AIRL.tim AIRL.sto.second
 airl-randgen 676 instances/slptestset/airl/ AIRL.cor AIRL.tim randgen.sto
 
 assets 100   instances/slptestset/assets/ assets.cor assets.tim assets.sto.small
-#assets 37500 instances/slptestset/assets/ assets.cor assets.tim assets.sto.large
+assets 37500 instances/slptestset/assets/ assets.cor assets.tim assets.sto.large
 
 4node 1     instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.1
 4node 2     instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.2
@@ -32,8 +32,8 @@ assets 100   instances/slptestset/assets/ assets.cor assets.tim assets.sto.small
 4node 512   instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.512
 4node 1024  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.1024
 4node 2048  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.2048
-#4node 4096  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.4096
-#4node 8192  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.8192
+4node 4096  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.4096
+4node 8192  instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.8192
 #4node 16384 instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.16384
 #4node 32768 instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.32768
 
@@ -49,8 +49,8 @@ assets 100   instances/slptestset/assets/ assets.cor assets.tim assets.sto.small
 4node-base 512   instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.512
 4node-base 1024  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.1024
 4node-base 2048  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.2048
-#4node-base 4096  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.4096
-#4node-base 8192  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.8192
+4node-base 4096  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.4096
+4node-base 8192  instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.8192
 #4node-base 16384 instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.16384
 #4node-base 32768 instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.32768
 
@@ -74,7 +74,7 @@ env 15    instances/slptestset/env/ env.cor env.tim env.sto.imp
 env 1200  instances/slptestset/env/ env.cor env.tim env.sto.1200
 env 1875  instances/slptestset/env/ env.cor env.tim env.sto.1875
 env 3780  instances/slptestset/env/ env.cor env.tim env.sto.3780
-#env 5292  instances/slptestset/env/ env.cor env.tim env.sto.5292
+env 5292  instances/slptestset/env/ env.cor env.tim env.sto.5292
 #env 8232  instances/slptestset/env/ env.cor env.tim env.sto.lrge
 #env 32928 instances/slptestset/env/ env.cor env.tim env.sto.xlrge
 
@@ -88,7 +88,7 @@ env-diss 15    instances/slptestset/env/ env.cor.diss env.tim env.sto.imp
 env-diss 1200  instances/slptestset/env/ env.cor.diss env.tim env.sto.1200
 env-diss 1875  instances/slptestset/env/ env.cor.diss env.tim env.sto.1875
 env-diss 3780  instances/slptestset/env/ env.cor.diss env.tim env.sto.3780
-#env-diss 5292  instances/slptestset/env/ env.cor.diss env.tim env.sto.5292
+env-diss 5292  instances/slptestset/env/ env.cor.diss env.tim env.sto.5292
 #env-diss 8232  instances/slptestset/env/ env.cor.diss env.tim env.sto.lrge
 #env-diss 32928 instances/slptestset/env/ env.cor.diss env.tim env.sto.xlrge
 

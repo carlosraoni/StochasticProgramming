@@ -39,12 +39,12 @@ Generating Problem Instance
 	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 	
-Total Number of Scenarios:  1200
+	Total Number of Scenarios:  1200
 
 Creating Deterministic Equivalent Model
 	Number of Variables: 58849
 	Number of Constraints: 57648
 
 Solving Deterministic Equivalent Model
-	Optimal Solution:  22428.9082327
+	Optimal Solution:  9731735.7548
 

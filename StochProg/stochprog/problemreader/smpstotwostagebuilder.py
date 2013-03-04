@@ -35,34 +35,35 @@ class SmpsToTwoStageBuilder(object):
             vars_and_coefs = [(var_by_col[col], coef) for col, coef in row.get_columns_and_coefs()]
             constr_id = self._two_stage_problem.add_root_constraint(row.get_name(), row.get_type(), vars_and_coefs, row.get_rhs(), stage)
             constr_by_row[row] = constr_id        
-
-
-    def _create_realization(self, realizations):
-        probability = 1.0
-        cost_changes = [] 
-        coefficient_changes = [] 
-        rhs_changes = []
-        
-        for prob_rea, cost_rea_changes, coef_rea_changes, rhs_rea_changes in realizations:
-            probability = probability * prob_rea
-            cost_changes.extend(cost_rea_changes)
-            coefficient_changes.extend(coef_rea_changes)
-            rhs_changes.extend(rhs_rea_changes)
-        
-        self._two_stage_problem.add_realization(probability, cost_changes, coefficient_changes, rhs_changes)
     
     
-    def _create_scenario_realizations(self, random_events, realizations):
+    def _generate_scenarios(self, random_events, realizations, prob, cost_changes, coef_changes, rhs_changes):
         n = len(random_events)
         prof = len(realizations)
         
         if n == prof:
-            self._create_realization(realizations)
+            scen = self._two_stage_problem.add_scenario(prob, cost_changes, coef_changes, rhs_changes) 
+            print '.',
+            if scen.get_id() % 40 == 0:                
+                print '\n\t',
             return
         
         for realization in random_events[prof]:
+            prob_rea, cost_rea_changes, coef_rea_changes, rhs_rea_changes = realization 
+            ncost_rea_changes, ncoef_rea_changes, nrhs_rea_changes = len(cost_rea_changes), len(coef_rea_changes), len(rhs_rea_changes)
+            
             realizations.append(realization)
-            self._create_scenario_realizations(random_events, realizations)
+            
+            cost_changes.extend(cost_rea_changes)
+            coef_changes.extend(coef_rea_changes)
+            rhs_changes.extend(rhs_rea_changes)
+            
+            self._generate_scenarios(random_events, realizations, prob * prob_rea, cost_changes, coef_changes, rhs_changes)
+            
+            cost_changes = cost_changes[:len(cost_changes) - ncost_rea_changes]
+            coef_changes = coef_changes[:len(coef_changes) - ncoef_rea_changes]
+            rhs_changes = rhs_changes[:len(rhs_changes) - nrhs_rea_changes]
+            
             realizations.pop()
     
     
@@ -134,12 +135,11 @@ class SmpsToTwoStageBuilder(object):
             else: # coef change
                 random_events.append([(prob, [], [(var_id, constr_id, coef)], []) for prob, coef in indep.get_realizations()])
                 
-        self._create_scenario_realizations(random_events, [])
-        
         print '\tGenerating Scenarios'
-        self._two_stage_problem.generate_scenarios()
+        print '\t',
+        self._generate_scenarios(random_events, [], 1.0, [], [], [])        
         
-        print 'Total Number of Scenarios: ', len(self._two_stage_problem.get_scenarios())
+        print '\n\tTotal Number of Scenarios: ', len(self._two_stage_problem.get_scenarios())
         print ''         
          
         return self._two_stage_problem 

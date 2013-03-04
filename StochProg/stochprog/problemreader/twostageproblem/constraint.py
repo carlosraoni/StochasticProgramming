@@ -18,9 +18,6 @@ class Constraint(object):
         self._name = name
         self._stage = stage
         
-        self._coefficients = {}
-        self._rhs = 0
-        
     
     def get_id(self):
         return self._id
@@ -32,22 +29,6 @@ class Constraint(object):
     
     def get_name(self):
         return self._name
-    
-    
-    def get_rhs(self):
-        return self._rhs
-    
-    
-    def set_var_coef(self, var_id, coef):
-        self._coefficients[var_id] = coef
-        
-    
-    def get_variables_and_coefficients(self):
-        return self._coefficients.items()
-        
-    
-    def set_rhs(self, coef):
-        self._rhs = coef
     
     
     def get_stage(self):
