@@ -41,6 +41,5 @@ Creating Deterministic Equivalent Model
 	Number of Constraints: 526185
 
 Solving Deterministic Equivalent Model
-('  Signal handler called from ', '/usr/lib/python2.7/subprocess.py', '_eintr_retry_call', 478)
-('  Waiting...',)
-('  Signaled process', 14127, 'with signal', 2)
+	Optimal Solution:  15802590.2445
+

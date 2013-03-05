@@ -1,0 +1,249 @@
+fxm ===================================================================
+Running Test: instances/posts/fxm/ fxm.cor fxm2.tim fxm2_6.sto
+fxm 6: 18417.0655725
+
+Running Test: instances/posts/fxm/ fxm.cor fxm2.tim fxm2_16.sto
+fxm 16: 18416.7590283
+
+
+fxmev ===================================================================
+Running Test: instances/posts/fxm/ fxm.cor fxm2.tim fxmev.sto
+fxmev 1: 18416.7590283
+
+
+pltexpa ===================================================================
+Running Test: instances/posts/pltexp/ pltexpA2.cor pltexpA2.tim pltexpA2_6.sto
+pltexpa 6: -9.47935440464
+
+Running Test: instances/posts/pltexp/ pltexpA2.cor pltexpA2.tim pltexpA2_16.sto
+pltexpa 16: -9.66330837303
+
+
+stormg2 ===================================================================
+Running Test: instances/posts/storm/ stormG2.cor stormG2.tim stormG2_8.sto
+stormg2 8: 15535235.7301
+
+Running Test: instances/posts/storm/ stormG2.cor stormG2.tim stormG2_27.sto
+stormg2 27: 15508982.3055
+
+Running Test: instances/posts/storm/ stormG2.cor stormG2.tim stormG2_125.sto
+stormg2 125: 15512091.1848
+
+Running Test: instances/posts/storm/ stormG2.cor stormG2.tim stormG2_1000.sto
+stormg2 1000: 15802590.2445
+
+
+airl-first ===================================================================
+Running Test: instances/slptestset/airl/ AIRL.cor AIRL.tim AIRL.sto.first
+airl-first 25: 249101.672072
+
+
+airl-second ===================================================================
+Running Test: instances/slptestset/airl/ AIRL.cor AIRL.tim AIRL.sto.second
+airl-second 25: 269665.49839
+
+
+airl-randgen ===================================================================
+Running Test: instances/slptestset/airl/ AIRL.cor AIRL.tim randgen.sto
+airl-randgen 676: 250262.049799
+
+
+assets ===================================================================
+Running Test: instances/slptestset/assets/ assets.cor assets.tim assets.sto.small
+assets 100: -723.838612926
+
+Running Test: instances/slptestset/assets/ assets.cor assets.tim assets.sto.large
+assets 37500: -695.962949802
+
+
+4node ===================================================================
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.1
+4node 1: 413.3875
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.2
+4node 2: 414.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.4
+4node 4: 416.5125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.8
+4node 8: 418.5125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.16
+4node 16: 423.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.32
+4node 32: 423.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.64
+4node 64: 423.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.128
+4node 128: 423.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.256
+4node 256: 425.375
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.512
+4node 512: 429.9625
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.1024
+4node 1024: 434.1125
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.2048
+4node 2048: 441.7375
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.4096
+4node 4096: 446.856249999
+
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.8192
+4node 8192: 446.856249999
+
+
+4node-base ===================================================================
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.1
+4node-base 1: 413.3875
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.2
+4node-base 2: 414.0125
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.4
+4node-base 4: 414.3875
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.8
+4node-base 8: 414.6875
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.16
+4node-base 16: 414.6875
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.32
+4node-base 32: 416.6
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.64
+4node-base 64: 416.6
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.128
+4node-base 128: 416.6
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.256
+4node-base 256: 417.161875
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.512
+4node-base 512: 420.2925
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.1024
+4node-base 1024: 423.05
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.2048
+4node-base 2048: 423.7625
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.4096
+4node-base 4096: 424.7525
+
+Running Test: instances/slptestset/4node/ 4node.cor.base 4node.tim 4node.sto.8192
+4node-base 8192: 424.775468749
+
+
+4node-old ===================================================================
+Running Test: instances/slptestset/4node/ 4node.cor 4node.tim 4node.sto.16old
+4node-old 32: 83094.0752747
+
+
+chem ===================================================================
+Running Test: instances/slptestset/chem/ chem.cor chem.tim chem.sto
+chem 2: -13009.1666667
+
+
+chem-base ===================================================================
+Running Test: instances/slptestset/chem/ chem.cor.base chem.tim chem.sto.base
+chem-base 2: -13009.1666667
+
+
+lands ===================================================================
+Running Test: instances/slptestset/lands/ LandS.cor LandS.tim LandS.sto
+lands 3: 381.853333333
+
+
+lands-blocks ===================================================================
+Running Test: instances/slptestset/lands/ LandS.cor LandS.tim LandS_blocks.sto
+lands-blocks 3: 381.853333333
+
+
+env-aggr ===================================================================
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.aggr
+env-aggr 5: 20478.698994
+
+
+env-first ===================================================================
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.first
+env-first 5: 19777.4447236
+
+
+env-loose ===================================================================
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.loose
+env-loose 5: 19777.4447236
+
+
+env ===================================================================
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.imp
+env 15: 22265.2549134
+
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.1200
+env 1200: 22428.9082327
+
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.1875
+env 1875: 22447.1131234
+
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.3780
+env 3780: 22441.0461308
+
+Running Test: instances/slptestset/env/ env.cor env.tim env.sto.5292
+env 5292: 22438.4323691
+
+
+env-diss-aggr ===================================================================
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.aggr
+env-diss-aggr 5: 15963.9290954
+
+
+env-diss-first ===================================================================
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.first
+env-diss-first 5: 14794.6082192
+
+
+env-diss-loose ===================================================================
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.loose
+env-diss-loose 5: 14794.6082192
+
+
+env-diss ===================================================================
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.imp
+env-diss 15: 20773.8885238
+
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.1200
+env-diss 1200: 20808.5931892
+
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.1875
+env-diss 1875: 20809.2882433
+
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.3780
+env-diss 3780: 20794.6831327
+
+Running Test: instances/slptestset/env/ env.cor.diss env.tim env.sto.5292
+env-diss 5292: 20788.6452995
+
+
+phone1 ===================================================================
+Running Test: instances/slptestset/phone/ phone.cor phone.tim phone.sto.1
+phone1 1: 36.9
+
+
+stocfor1 ===================================================================
+Running Test: instances/slptestset/stocfor1/ stocfor1.cor stocfor1.tim stocfor1.sto
+stocfor1 1: -41131.9832324
+
+
+stocfor2 ===================================================================
+Running Test: instances/slptestset/stocfor2/ stocfor2.cor stocfor2.tim stocfor2.sto
+stocfor2 64: -39772.4477148
+

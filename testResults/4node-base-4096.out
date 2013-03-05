@@ -110,10 +110,13 @@ Generating Problem Instance
 	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 	. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-	. . . . . . . . . . . . . . . . Total Number of Scenarios:  4096
+	. . . . . . . . . . . . . . . . 
+	Total Number of Scenarios:  4096
 
 Creating Deterministic Equivalent Model
-('  Signal handler called from ', '/usr/local/lib/python2.7/dist-packages/coopr/pyomo/base/var.py', 'construct', 524)
-('  Waiting...',)
-('  Signal', 2, 'recieved, but no process queued')
-  Exiting now
+	Number of Variables: 761908
+	Number of Constraints: 303120
+
+Solving Deterministic Equivalent Model
+	Optimal Solution:  424.7525
+
