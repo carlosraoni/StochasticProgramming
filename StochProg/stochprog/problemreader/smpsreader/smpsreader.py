@@ -8,19 +8,7 @@ from stochprog.problemreader.smpsreader.block import Block
 from stochprog.problemreader.smpsreader.indep import Indep
 from stochprog.problemreader.smpsreader.exception import FormatError
 from stochprog.problemreader.smpsreader.exception import NotSupportedError
-from stochprog.problemreader.smpsreader.exception import WrongFileError
 
-#CORE_FILE_PATH = '../../../instances/assets.cor'
-#TIME_FILE_PATH = '../../../instances/assets.tim'
-#STOCH_FILE_PATH = '../../../instances/assets.sto.small'
-
-#CORE_FILE_PATH = '../../../instances/env.cor'
-#TIME_FILE_PATH = '../../../instances/env.tim'
-#STOCH_FILE_PATH = '../../../instances/env.sto.1200'
-
-CORE_FILE_PATH = '../../../instances/airl.cor'
-TIME_FILE_PATH = '../../../instances/airl.tim'
-STOCH_FILE_PATH = '../../../instances/airl.sto.first'
 
 _STOCH_FILE_SECTION_NAMES = Set(['STOCH',
                                  'SIMPLE',
@@ -441,9 +429,6 @@ class SMPSReader(object):
         print ''
 
 
-if __name__ == '__main__':
-    smps_reader = SMPSReader(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
-    smps_reader.read()
     
     
     

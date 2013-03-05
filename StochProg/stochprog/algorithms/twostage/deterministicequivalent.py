@@ -7,18 +7,6 @@ from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProb
 from stochprog.problemreader.smpstotwostagebuilder import SmpsToTwoStageBuilder
 from stochprog.problemreader.twostageproblem.constraint import ConstraintType
 
-#CORE_FILE_PATH = '../../../instances/assets.cor'
-#TIME_FILE_PATH = '../../../instances/assets.tim'
-#STOCH_FILE_PATH = '../../../instances/assets.sto.small'
-
-CORE_FILE_PATH = '../../../instances/env.cor'
-TIME_FILE_PATH = '../../../instances/env.tim'
-STOCH_FILE_PATH = '../../../instances/env.sto.1200'
-
-#CORE_FILE_PATH = '../../../instances/airl.cor'
-#TIME_FILE_PATH = '../../../instances/airl.tim'
-#STOCH_FILE_PATH = '../../../instances/airl.sto.first'
-#STOCH_FILE_PATH = '../../../instances/airl.sto.second'
 
 class DeterministicEquivalent(object):
     

@@ -2,19 +2,6 @@
 from stochprog.problemreader.smpsreader.smpsreader import SMPSReader
 from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProblem
 
-#CORE_FILE_PATH = '../../instances/assets.cor'
-#TIME_FILE_PATH = '../../instances/assets.tim'
-#STOCH_FILE_PATH = '../../instances/assets.sto.small'
-
-#CORE_FILE_PATH = '../../instances/env.cor'
-#TIME_FILE_PATH = '../../instances/env.tim'
-#STOCH_FILE_PATH = '../../instances/env.sto.1200'
-
-CORE_FILE_PATH = '../../instances/airl.cor'
-TIME_FILE_PATH = '../../instances/airl.tim'
-STOCH_FILE_PATH = '../../instances/airl.sto.first'
-#STOCH_FILE_PATH = '../../instances/airl.sto.second'
-
 
 class SmpsToTwoStageBuilder(object):
     
@@ -144,10 +131,5 @@ class SmpsToTwoStageBuilder(object):
          
         return self._two_stage_problem 
     
-    
-if __name__ == '__main__':
-    two_stage_builder = SmpsToTwoStageBuilder(CORE_FILE_PATH, TIME_FILE_PATH, STOCH_FILE_PATH)
-    two_stage_problem = two_stage_builder.build_two_stage_instance()
-    two_stage_problem.print_instance()
     
     

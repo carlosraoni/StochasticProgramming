@@ -1,4 +1,4 @@
-import copy
+
 from stochprog.problemreader.twostageproblem.variable import Variable
 from stochprog.problemreader.twostageproblem.variable import VariableType
 from stochprog.problemreader.twostageproblem.constraint import Constraint
