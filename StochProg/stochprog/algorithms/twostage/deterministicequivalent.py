@@ -114,9 +114,10 @@ class DeterministicEquivalent(object):
         return model
     
     
-    def solve(self, solver_name='glpk'):
+    def solve(self, solver):
         print 'Solving Deterministic Equivalent Model'        
-        opt = SolverFactory(solver_name)
+        opt = solver
+        
         results = opt.solve(self._det_equiv_instance)        
         self._det_equiv_instance.load(results)
         model = self._det_equiv_instance
@@ -160,9 +161,12 @@ def _main(argv):
     det_equiv = DeterministicEquivalent(two_stage_problem)
     model = det_equiv.create_model()
     
+    #solver = SolverFactory('cplex', solver_io='python')
+    solver = SolverFactory('cplex')
+    
     #model.pprint()
     #det_equiv.solve('cbc')
-    det_equiv.solve('cplex')
+    det_equiv.solve(solver)
     #det_equiv.solve()
 
 
