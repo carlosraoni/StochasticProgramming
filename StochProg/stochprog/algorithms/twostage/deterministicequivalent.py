@@ -2,6 +2,7 @@ import sys
 
 from coopr.pyomo import *
 from coopr.opt import SolverFactory
+from guppy import hpy
 
 from stochprog.problemreader.twostageproblem.twostageproblem import TwoStageProblem
 from stochprog.problemreader.smpstotwostagebuilder import SmpsToTwoStageBuilder
@@ -117,6 +118,9 @@ class DeterministicEquivalent(object):
     def solve(self, solver):
         print 'Solving Deterministic Equivalent Model'        
         opt = solver
+        
+        #h = hpy()
+        #print h.heap()
         
         results = opt.solve(self._det_equiv_instance)        
         self._det_equiv_instance.load(results)
