@@ -7,7 +7,6 @@ __MAX_ITER = 1 # Max number of iterations for the cutting plane algorithm
 
 # global instance data structures
 triples = []
-triples_by_node = []
 n = 0
 m = 0
 
@@ -21,15 +20,10 @@ def read_instance(file_path):
         n = int(line_fields[0])
         m = int(line_fields[1])
         triples = [None for i in xrange(m)]
-        triples_by_node = [[] for i in xrange(n)]       
-                
         for i in range(m):
             line_fields = instance.readline().split()
             triple = (int(line_fields[0]) - 1, int(line_fields[1]) - 1, int(line_fields[2]) - 1)
-            triples[i] = triple
-            triples_by_node[triple[0]].append(i)
-            triples_by_node[triple[1]].append(i)
-            triples_by_node[triple[2]].append(i)
+            triples[i] = triple            
                 
     return n, m, triples            
 
@@ -56,22 +50,36 @@ def create_beta_var(subprob):
 
 # create subproblem u vars (constraint linear combination vars)
 def create_u_vars(subprob, master_prob, mp_var_indices, mp_var_names, mp_constr_names, mp_constr_indices):
-    pass
+    u_vars_dict = {}
+    polyhedrons = [0, 1]
+    for constr_index, constr_name in zip(mp_constr_indices, mp_constr_names):
+        for i in polyhedrons:
+            u_var_name = 'u_' + str(i)+ '_c_' + constr_name
+            u_var_index = subprob.variables.get_num()
+            subprob.variables.add(lb=[0.0], names=[u_var_name])
+            u_vars_dict[(i, 'c', constr_index)] = (u_var_name, u_var_index)
+    
+    bound_constr_types = ['lb', 'ub']        
+    for var_index, var_name in zip(mp_var_indices, mp_var_names):
+        for i in polyhedrons:
+            for type in bound_constr_types:
+                u_var_name = 'u_' + str(i) + '_' + type + '_' + var_name
+                u_var_index = subprob.variables.get_num()
+                subprob.variables.add(lb=[0.0], names=[u_var_name])
+                u_vars_dict[(i, type, var_index)] = (u_var_name, u_var_index)
+                
+    return u_vars_dict
 
 
 # create subproblem v vars ()
 def create_v_vars(subprob):
     v_vars_dict = {}
-    v1_var_name = 'v1'
-    v1_var_index = subprob.variables.get_num()
-    subprob.variables.add(names=[v1_var_name])
-    v_vars_dict[1] = (v1_var_name, v1_var_index) 
-    
-    v2_var_name = 'v2'
-    v2_var_index = subprob.variables.get_num()
-    subprob.variables.add(names=[v2_var_name])
-    v_vars_dict[2] = (v2_var_name, v2_var_index)
-    
+    polyhedrons = [0, 1]
+    for i in polyhedrons:
+        v_var_name = 'v_' + str(i)
+        v_var_index = subprob.variables.get_num()
+        subprob.variables.add(names=[v_var_name])
+        v_vars_dict[i] = (v_var_name, v_var_index)     
     return v_vars_dict
 
 
@@ -85,12 +93,17 @@ def generate_lift_and_project_cut(master_prob, var_index, subproblem_label='lift
     subprob = cplex.Cplex()
     subprob.objective.set_sense(subprob.objective.sense.maximize)    
     
+    # create subproblem vars
     alpha_vars_dict = create_alpha_vars(subprob, master_prob, var_indices, var_names)
     beta_var_name, beta_var_index = create_beta_var(subprob)
     u_vars_dict = create_u_vars(subprob, master_prob, var_indices, var_names, constr_names, constr_indices)
     v_vars_dict = create_v_vars(subprob)
     
-    return None, 0.0
+    # create subproblem constraints
+    # solve subproblem
+    # generate cut
+    
+    return None
 
 
 # method to add a cut to a problem
@@ -150,8 +163,8 @@ while iteration < __MAX_ITER:
             print 'Variable x_' + str(i) +' fractional = ' + str(val)
             print 'Running lift and project separation for x_' + str(i)
             subproblem_label = 'iter_' + str(iteration) + '_subproblem_x_' + str(i)
-            cut, sub_problem_obj = generate_lift_and_project_cut(master_prob, x[i], subproblem_label, True)
-            if cut is not None and sub_problem_obj > 0.0:
+            cut = generate_lift_and_project_cut(master_prob, x[i], subproblem_label, True)
+            if cut is not None:
                 iteration_cuts.append(cut)
         else:
             print 'Variable x_' + str(i) +' integer = ' + str(val)
