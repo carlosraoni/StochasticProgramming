@@ -62,8 +62,6 @@ def create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u
         constr_pairs = master_prob.variables.get_cols(var_index)
         constr_indices = constr_pairs.ind
         constr_coefs = constr_pairs.val
-        #print constrs
-        #print coefs
         for int_value in int_values:
             vars = [alpha_vars_dict[var_index]]
             coefs = [1.0]

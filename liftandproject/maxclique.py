@@ -10,13 +10,14 @@ __MAX_ITER = 100 # Max number of iterations for the cutting plane algorithm
 def read_instance(file_path):
     with open(file_path) as instance:
         line_fields = instance.readline().split()
-        n = int(line_fields[0])
-        m = int(line_fields[1])
-        edges = [None for i in xrange(m)]
+        while line_fields[0] == 'c':
+            line_fields = instance.readline().split()        
+        n = int(line_fields[2])
+        m = int(line_fields[3])
+        edges = []
         for i in range(m):
             line_fields = instance.readline().split()
-            triple = (int(line_fields[0]) - 1, int(line_fields[1]) - 1, int(line_fields[2]) - 1)
-            edges[i] = triple            
+            edges.append((int(line_fields[1]) - 1, int(line_fields[2]) - 1))
                 
     return n, m, edges            
 
@@ -31,6 +32,8 @@ print 'n =', n
 print 'm = ', m
 print edges
 
+edges_set = set(edges)
+
 master_prob = cplex.Cplex()
 
 x = []
@@ -43,10 +46,13 @@ for i in range(n):
     master_prob.variables.add(obj = [1.0], lb = [0.0], ub = [1.0], names = [var_name])
     
 # Create problem constraints
-for i in range(m):
-    vars = [x[edges[i][0]], x[edges[i][1]], x[edges[i][2]]]
-    coefs = [1.0, 1.0, 1.0]    
-    master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['G'], rhs = [1.0], names = ['T_'+str(i)])
+for i in range(n):
+    for j in range(i+1, n):
+        if (i,j) in edges_set or (j, i) in edges_set:
+            continue
+        vars = [x[i], x[j]]
+        coefs = [1.0, 1.0]    
+        master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['G'], rhs = [1.0], names = ['C_'+str(i)+'_'+str(j)])
 
 
 # Cutting plane loop
@@ -55,7 +61,7 @@ previous_obj = 0.0
 while iteration < __MAX_ITER:        
     print "-------------------------- Iteration", iteration, "------------------------------------------------"
     # Save current model to a file
-    #master_prob.write('./output/problem_'+str(iteration)+'.lp')
+    #master_prob.write('./output/problem_clq_'+str(iteration)+'.lp')
     
     # Optimize current model
     master_prob.solve()    
@@ -63,6 +69,7 @@ while iteration < __MAX_ITER:
     current_obj = solution.get_objective_value()
     print "Cpx Solution status: " , solution.status[solution.get_status()]    
     print "Cpx Objective value: " , current_obj
+    print "Max Clique Upper Bound: ", n - current_obj
     
     x_values = solution.get_values(x)
     print "Solution: ", x_values
@@ -102,15 +109,17 @@ while iteration < __MAX_ITER:
 
 
 # Optimize last model
-master_prob.write('./output/master_problem.lp')
+master_prob.write('./output/master_problem_clq.lp')
 master_prob.solve()
+current_obj = solution.get_objective_value()
 
 print
 print 'Final Solution:'
 print
 
 solution = master_prob.solution
-print "\tCpx Objective value: " , current_obj
+print "\tMin Set Cover Lower Bound: " , current_obj
+print "\tMax Clique Upper Bound: ", n - current_obj
     
 x_values = solution.get_values(x)
 print "\tSolution: ", x_values
