@@ -1,9 +1,11 @@
 import sys
 import cplex
+
 from cplex._internal._matrices import SparsePair
+from liftandprojectcuts import generate_lift_and_project_cut
 
 # global constants
-__MAX_ITER = 1 # Max number of iterations for the cutting plane algorithm
+__MAX_ITER = 100 # Max number of iterations for the cutting plane algorithm
 
 # global instance data structures
 triples = []
@@ -26,89 +28,6 @@ def read_instance(file_path):
             triples[i] = triple            
                 
     return n, m, triples            
-
-
-# create alpha subproblem vars (cut coefficients variables)
-def create_alpha_vars(subprob, masterprob, mp_var_indices, mp_var_names):
-    alpha_vars_dict = {} 
-    for var_index, var_name in zip(mp_var_indices, mp_var_names):
-        alpha_var_name = 'a_' + var_name
-        alpha_var_index = subprob.variables.get_num()
-        subprob.variables.add(obj=[-masterprob.solution.get_values(var_index)], names=[alpha_var_name])
-        alpha_vars_dict[var_index] = (alpha_var_name, alpha_var_index)
-        
-    return alpha_vars_dict
-        
-        
-# create beta subproblem var (cut rhs variable)
-def create_beta_var(subprob):
-    beta_var_name = 'b'
-    beta_var_index = subprob.variables.get_num()
-    subprob.variables.add(obj=[1.0], names=[beta_var_name])
-    return beta_var_name, beta_var_index
-
-
-# create subproblem u vars (constraint linear combination vars)
-def create_u_vars(subprob, master_prob, mp_var_indices, mp_var_names, mp_constr_names, mp_constr_indices):
-    u_vars_dict = {}
-    polyhedrons = [0, 1]
-    for constr_index, constr_name in zip(mp_constr_indices, mp_constr_names):
-        for i in polyhedrons:
-            u_var_name = 'u_' + str(i)+ '_c_' + constr_name
-            u_var_index = subprob.variables.get_num()
-            subprob.variables.add(lb=[0.0], names=[u_var_name])
-            u_vars_dict[(i, 'c', constr_index)] = (u_var_name, u_var_index)
-    
-    bound_constr_types = ['lb', 'ub']        
-    for var_index, var_name in zip(mp_var_indices, mp_var_names):
-        for i in polyhedrons:
-            for type in bound_constr_types:
-                u_var_name = 'u_' + str(i) + '_' + type + '_' + var_name
-                u_var_index = subprob.variables.get_num()
-                subprob.variables.add(lb=[0.0], names=[u_var_name])
-                u_vars_dict[(i, type, var_index)] = (u_var_name, u_var_index)
-                
-    return u_vars_dict
-
-
-# create subproblem v vars ()
-def create_v_vars(subprob):
-    v_vars_dict = {}
-    polyhedrons = [0, 1]
-    for i in polyhedrons:
-        v_var_name = 'v_' + str(i)
-        v_var_index = subprob.variables.get_num()
-        subprob.variables.add(names=[v_var_name])
-        v_vars_dict[i] = (v_var_name, v_var_index)     
-    return v_vars_dict
-
-
-# separation algorithm to generate lift and project cut for a particular variable (var_index)
-def generate_lift_and_project_cut(master_prob, var_index, subproblem_label='lift_and_project_subproblem', save_subproblem_lp=False):    
-    var_names = master_prob.variables.get_names()
-    var_indices = master_prob.variables.get_indices(var_names)
-    constr_names = master_prob.linear_constraints.get_names()
-    constr_indices = master_prob.linear_constraints.get_indices(constr_names)
-    
-    subprob = cplex.Cplex()
-    subprob.objective.set_sense(subprob.objective.sense.maximize)    
-    
-    # create subproblem vars
-    alpha_vars_dict = create_alpha_vars(subprob, master_prob, var_indices, var_names)
-    beta_var_name, beta_var_index = create_beta_var(subprob)
-    u_vars_dict = create_u_vars(subprob, master_prob, var_indices, var_names, constr_names, constr_indices)
-    v_vars_dict = create_v_vars(subprob)
-    
-    # create subproblem constraints
-    # solve subproblem
-    # generate cut
-    
-    return None
-
-
-# method to add a cut to a problem
-def add_cut_to_problem(prob, cut):
-    pass
 
 
 # Parse argument
@@ -143,7 +62,7 @@ iteration = 0
 while iteration < __MAX_ITER:        
     print "-------------------------- Iteration", iteration, "------------------------------------------------"
     # Save current model to a file
-    master_prob.write('./output/problem_'+str(iteration)+'.lp')
+    #master_prob.write('./output/problem_'+str(iteration)+'.lp')
     
     # Optimize current model
     master_prob.solve()
@@ -160,10 +79,10 @@ while iteration < __MAX_ITER:
     for i in range(n):
         val = x_values[x[i]]
         if val > 0.0 and val < 1.0:
-            print 'Variable x_' + str(i) +' fractional = ' + str(val)
+            #print 'Variable x_' + str(i) +' fractional = ' + str(val)
             print 'Running lift and project separation for x_' + str(i)
             subproblem_label = 'iter_' + str(iteration) + '_subproblem_x_' + str(i)
-            cut = generate_lift_and_project_cut(master_prob, x[i], subproblem_label, True)
+            cut = generate_lift_and_project_cut(master_prob, x[i], subproblem_label, save_subproblem_lp=False)
             if cut is not None:
                 iteration_cuts.append(cut)
         else:
@@ -176,11 +95,15 @@ while iteration < __MAX_ITER:
     
     print "Adding cuts to the master problem"
     for cut in iteration_cuts:
-        add_cut_to_problem(master_prob, cut)
+        master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(cut['vars'], cut['coefs'])], senses = [cut['sense']], rhs = [cut['rhs']])
         
     print "---------------------------------------------------------------------------------------"
     iteration += 1
 
+
+master_prob.write('./output/master_problem.lp')
+# Optimize current model
+master_prob.solve()
 
 print
 print 'Final Solution:'
