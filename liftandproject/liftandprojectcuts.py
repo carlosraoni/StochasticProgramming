@@ -101,7 +101,7 @@ def create_cut_rhs_constraints(subprob, master_prob, beta_var_index, u_vars_dict
             u_var_index = u_vars_dict[(int_value, 'ub', var_index)]            
             vars.append(u_var_index)
             coefs.append(1.0)
-        subprob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['L'], rhs = [0.0], names = ['Beta_'+str(int_value)])
+        subprob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['E'], rhs = [0.0], names = ['Beta_'+str(int_value)])
 
 
 # create constraint sum(u0) + sum(u1) + v0 + v1 <= 1
@@ -172,5 +172,5 @@ def generate_lift_and_project_cut(master_prob, cut_var_index, subproblem_label='
     #print '\trhs', rhs
     #print
         
-    return {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs}
+    return {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs, 'obj': obj}
             
