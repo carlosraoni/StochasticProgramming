@@ -78,7 +78,7 @@ while iteration < __MAX_ITER:
     print "Solution: ", x_values
     print
     print
-    print 'Current Exectution Time:', time.time() - start_time, 'seconds'
+    print 'Current Execution Time:', time.time() - start_time, 'seconds'
     
     if abs(previous_obj - current_obj) < 1e-9:
         break
@@ -94,7 +94,7 @@ while iteration < __MAX_ITER:
     print "Adding cuts to the master problem"
     deepest_cut = iteration_cuts[0]
     for cut in iteration_cuts:
-        if cut['obj'] > deepest_cut['obj']:
+        if cut['violation'] > deepest_cut['violation']:
             deepest_cut = cut
         master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(cut['vars'], cut['coefs'])], senses = [cut['sense']], rhs = [cut['rhs']])
     #master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(deepest_cut['vars'], deepest_cut['coefs'])], senses = [deepest_cut['sense']], rhs = [deepest_cut['rhs']])
@@ -105,8 +105,11 @@ while iteration < __MAX_ITER:
 # Optimize last model
 master_prob.write('./output/master_problem_clq.lp')
 master_prob.solve()
-current_obj = solution.get_objective_value()
 
+#master_prob.variables.set_types([(var_name, 'B') for var_name in master_prob.variables.get_names()])
+#master_prob.solve()
+
+current_obj = solution.get_objective_value()
 print
 print 'Final Solution:'
 print
@@ -119,4 +122,4 @@ x_values = solution.get_values(x)
 print "\tSolution: ", x_values
 
 print
-print 'Total Exectution Time:', time.time() - start_time, 'seconds'
+print 'Total Execution Time:', time.time() - start_time, 'seconds'

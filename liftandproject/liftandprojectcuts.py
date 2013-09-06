@@ -177,7 +177,7 @@ def generate_lift_and_project_cuts(master_prob, cut_var_indices=None, subproblem
                 vars.append(var_index)
                 coefs.append(solution.get_values(alpha_vars_dict[var_index]))
             rhs = solution.get_values(beta_var_index)
-            cut = {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs, 'obj': obj}
+            cut = {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs, 'violation': obj}
             cuts.append(cut)
             
         subprob.linear_constraints.set_coefficients(coef_constrs_dict[(cut_var_index, 0)], v_vars_dict[0], 0.0)
@@ -185,3 +185,59 @@ def generate_lift_and_project_cuts(master_prob, cut_var_indices=None, subproblem
     print   
     return cuts
             
+
+def lift_and_project_cutting_plane_loop(master_prob, MAX_ITER=10):
+    # Cutting plane loop
+    iteration = 0
+    previous_obj = 0.0
+    #cut_pool = set()
+    while iteration < MAX_ITER:        
+        print "-------------------------- Iteration", iteration, "------------------------------------------------"
+        # Save current model to a file
+        #master_prob.write('./output/problem_'+str(iteration)+'.lp')
+        
+        # Optimize current model
+        master_prob.solve()    
+        solution = master_prob.solution
+        current_obj = solution.get_objective_value()
+        print "Cpx Solution status: " , solution.status[solution.get_status()]    
+        print "Cpx Objective value: " , current_obj
+        
+        x_values = solution.get_values()
+        print "Solution: ", x_values
+        print
+        
+        #if abs(previous_obj - current_obj) < 1e-15:
+        #    break
+        previous_obj = current_obj
+        
+        # remove non-tight cuts
+        #non_tight_cuts = [cut_name for cut_name in cut_pool if abs(solution.get_linear_slacks(cut_name)) > 1e-6]
+        #master_prob.linear_constraints.delete(non_tight_cuts)
+        #for cut_name in non_tight_cuts:
+        #    cut_pool.remove(cut_name)    
+        #master_prob.solve()
+        
+        print 'Running lift and project separation'
+        iteration_cuts = generate_lift_and_project_cuts(master_prob)
+        if len(iteration_cuts) == 0:
+            print "No cut found! Finishing Algorithm!"
+            print "---------------------------------------------------------------------------------------"
+            break
+        
+        print "Adding cuts to the master problem"
+        #deepest_cut = iteration_cuts[0]
+        for i, cut in enumerate(iteration_cuts):
+            #if cut['violation'] > deepest_cut['violation']:
+            #    deepest_cut = cut
+            cut_name = 'lpc_' + str(iteration) + '_' + str(i) 
+            master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(cut['vars'], cut['coefs'])], senses = [cut['sense']], rhs = [cut['rhs']], names=[cut_name])
+            #cut_pool.add(cut_name)
+        #master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(deepest_cut['vars'], deepest_cut['coefs'])], senses = [deepest_cut['sense']], rhs = [deepest_cut['rhs']])
+        print "---------------------------------------------------------------------------------------"
+        iteration += 1
+        
+    # Optimize last model
+    master_prob.write('./output/master_problem.lp')
+    master_prob.solve()
+

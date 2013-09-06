@@ -2,7 +2,8 @@ import sys
 import cplex
 
 from cplex._internal._matrices import SparsePair
-from liftandprojectcuts import generate_lift_and_project_cuts
+from liftandprojectcuts import generate_lift_and_project_cuts,\
+    lift_and_project_cutting_plane_loop
 import time
 
 __MAX_ITER = 100 # Max number of iterations for the cutting plane algorithm
@@ -51,61 +52,21 @@ for i in range(m):
     coefs = [1.0, 1.0, 1.0]    
     master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['G'], rhs = [1.0], names = ['T_'+str(i)])
 
+# lift and project loop
+lift_and_project_cutting_plane_loop(master_prob, __MAX_ITER)
 
-# Cutting plane loop
-iteration = 0
-previous_obj = 0.0
-while iteration < __MAX_ITER:        
-    print "-------------------------- Iteration", iteration, "------------------------------------------------"
-    # Save current model to a file
-    #master_prob.write('./output/problem_'+str(iteration)+'.lp')
-    
-    # Optimize current model
-    master_prob.solve()    
-    solution = master_prob.solution
-    current_obj = solution.get_objective_value()
-    print "Cpx Solution status: " , solution.status[solution.get_status()]    
-    print "Cpx Objective value: " , current_obj
-    
-    x_values = solution.get_values(x)
-    print "Solution: ", x_values
-    print
-    
-    #if abs(previous_obj - current_obj) < 1e-15:
-    #    break
-    previous_obj = current_obj
-    
-    print 'Running lift and project separation'
-    iteration_cuts = generate_lift_and_project_cuts(master_prob)
-    if len(iteration_cuts) == 0:
-        print "No cut found! Finishing Algorithm!"
-        print "---------------------------------------------------------------------------------------"
-        break
-    
-    print "Adding cuts to the master problem"
-    deepest_cut = iteration_cuts[0]
-    for cut in iteration_cuts:
-        if cut['obj'] > deepest_cut['obj']:
-            deepest_cut = cut
-        master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(cut['vars'], cut['coefs'])], senses = [cut['sense']], rhs = [cut['rhs']])
-    #master_prob.linear_constraints.add(lin_expr = [cplex.SparsePair(deepest_cut['vars'], deepest_cut['coefs'])], senses = [deepest_cut['sense']], rhs = [deepest_cut['rhs']])
-    print "---------------------------------------------------------------------------------------"
-    iteration += 1
-
-
-# Optimize last model
-master_prob.write('./output/master_problem.lp')
-master_prob.solve()
+#master_prob.variables.set_types([(var_name, 'B') for var_name in master_prob.variables.get_names()])
+#master_prob.solve()
 
 print
 print 'Final Solution:'
 print
 
 solution = master_prob.solution
-print "\tCpx Objective value: " , current_obj
+print "\tCpx Objective value: " , solution.get_objective_value()
     
 x_values = solution.get_values(x)
 print "\tSolution: ", x_values
 
 print
-print 'Total Exectution Time:', time.time() - start_time, 'seconds'
+print 'Total Execution Time:', time.time() - start_time, 'seconds'
