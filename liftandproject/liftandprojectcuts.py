@@ -1,4 +1,7 @@
 import cplex
+import random
+
+__EPS = 1e-6
 
 # create alpha subproblem vars (cut coefficients variables)
 def create_alpha_vars(subprob, masterprob, mp_var_indices, mp_var_names):
@@ -56,7 +59,8 @@ def create_v_vars(subprob):
 
 
 # create constraints alpha = uAt + vei
-def create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u_vars_dict, v_vars_dict, cut_var_index, var_indices):
+def create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u_vars_dict, v_vars_dict, var_indices):
+    constrs_dict = {}
     int_values = [0, 1]
     for var_index in var_indices:
         constr_pairs = master_prob.variables.get_cols(var_index)
@@ -75,15 +79,18 @@ def create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u
             u_var_index = u_vars_dict[(int_value, 'ub', var_index)]
             vars.append(u_var_index)
             coefs.append(1.0)
-            if var_index == cut_var_index:
-                v_var_index = v_vars_dict[int_value]
-                vars.append(v_var_index)
-                coefs.append(-1.0)            
+            
+            v_var_index = v_vars_dict[int_value]
+            vars.append(v_var_index)
+            #coefs.append(-1.0)
+            coefs.append(0.0)
+            constr_index = subprob.linear_constraints.get_num()
             subprob.linear_constraints.add(lin_expr = [cplex.SparsePair(vars, coefs)], senses = ['E'], rhs = [0.0], names = ['Alpha_'+str(var_index)+'_'+str(int_value)])
-
+            constrs_dict[(var_index, int_value)] = constr_index
+    return constrs_dict
 
 # create constraints beta <= ub + v
-def create_cut_rhs_constraints(subprob, master_prob, beta_var_index, u_vars_dict, v_vars_dict, cut_var_index, var_indices, constr_indices):
+def create_cut_rhs_constraints(subprob, master_prob, beta_var_index, u_vars_dict, v_vars_dict, var_indices, constr_indices):
     int_values = [0,1]
     for int_value in int_values:
         vars = [beta_var_index, v_vars_dict[int_value]]
@@ -116,13 +123,20 @@ def create_normalization_constraint(subprob, master_prob, u_vars_dict, v_vars_di
 
 
 # separation algorithm to generate lift and project cut for a particular variable (var_index)
-def generate_lift_and_project_cut(master_prob, cut_var_index, subproblem_label='lift_and_project_subproblem', save_subproblem_lp=False):    
+def generate_lift_and_project_cuts(master_prob, cut_var_indices=None, subproblem_label='lift_and_project_subproblem', save_subproblem_lp=False):        
     var_names = master_prob.variables.get_names()
     var_indices = master_prob.variables.get_indices(var_names)
     constr_names = master_prob.linear_constraints.get_names()
     constr_indices = master_prob.linear_constraints.get_indices(constr_names)
+    curr_solution = master_prob.solution
+    
+    if cut_var_indices is None:
+        values = curr_solution.get_values(var_indices)
+        # all fractional variables
+        cut_var_indices = [var_indices[i] for i, val in enumerate(values) if val-__EPS > 0.0 and val+__EPS < 1.0]
     
     subprob = cplex.Cplex()
+    subprob.parameters.lpmethod.set(subprob.parameters.lpmethod.values.primal)
     subprob.objective.set_sense(subprob.objective.sense.maximize)    
     
     # create subproblem vars
@@ -132,43 +146,42 @@ def generate_lift_and_project_cut(master_prob, cut_var_index, subproblem_label='
     v_vars_dict = create_v_vars(subprob)
     
     # create subproblem constraints
-    create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u_vars_dict, v_vars_dict, cut_var_index, var_indices)
-    create_cut_rhs_constraints(subprob, master_prob, beta_var_index, u_vars_dict, v_vars_dict, cut_var_index, var_indices, constr_indices)
-    create_normalization_constraint(subprob, master_prob, u_vars_dict, v_vars_dict)
-    if save_subproblem_lp:
-        subprob.write('output/'+subproblem_label+'.lp')
+    coef_constrs_dict = create_cut_coefficients_constraints(subprob, master_prob, alpha_vars_dict, u_vars_dict, v_vars_dict, var_indices)
+    create_cut_rhs_constraints(subprob, master_prob, beta_var_index, u_vars_dict, v_vars_dict, var_indices, constr_indices)
+    create_normalization_constraint(subprob, master_prob, u_vars_dict, v_vars_dict)    
     
-    # solve subproblem
-    subprob.set_results_stream(None)
-    subprob.solve()
-    solution = subprob.solution
-    status = solution.get_status()
-    obj = solution.get_objective_value()
-    
-    #solution.write('output/'+subproblem_label+'_solution.out')
-    #print
-    #print "Subproblem Solution status: " , solution.status[status]
-    #print "Subproblem Objective value: " , obj    
-    #print
-    
-    if status != solution.status.optimal or obj <= 0.0:
-        print "\t#### No separation cut found!"
-        return None
-            
-    # generate cut
-    vars = []
-    coefs = []
-    for var_index in var_indices:
-        vars.append(var_index)
-        coefs.append(solution.get_values(alpha_vars_dict[var_index]))
-    rhs = solution.get_values(beta_var_index)
-    
-    #print
-    #print '\tCut'
-    #print '\tvars', vars
-    #print '\tcoefs', coefs
-    #print '\trhs', rhs
-    #print
+    #random.shuffle(cut_var_indices)
+    cuts = []
+    print 'Solving subproblems:',
+    for iteration, cut_var_index in enumerate(cut_var_indices):
+        #if iteration >= 10:
+        #    break
+        print cut_var_index, 
+        subprob.linear_constraints.set_coefficients(coef_constrs_dict[(cut_var_index, 0)], v_vars_dict[0], -1.0)
+        subprob.linear_constraints.set_coefficients(coef_constrs_dict[(cut_var_index, 1)], v_vars_dict[1], -1.0)
         
-    return {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs, 'obj': obj}
+        if save_subproblem_lp:
+            subprob.write('output/'+subproblem_label+str(cut_var_index)+'.lp')
+        # solve subproblem        
+        #subprob = cplex.Cplex(subprob)
+        subprob.set_results_stream(None)        
+        subprob.solve()
+        solution = subprob.solution
+        status = solution.get_status()
+        obj = solution.get_objective_value()    
+        if status == solution.status.optimal and obj > 0.0:                
+            # generate cut
+            vars = []
+            coefs = []
+            for var_index in var_indices:
+                vars.append(var_index)
+                coefs.append(solution.get_values(alpha_vars_dict[var_index]))
+            rhs = solution.get_values(beta_var_index)
+            cut = {'vars': vars, 'coefs': coefs, 'sense': 'G', 'rhs': rhs, 'obj': obj}
+            cuts.append(cut)
+            
+        subprob.linear_constraints.set_coefficients(coef_constrs_dict[(cut_var_index, 0)], v_vars_dict[0], 0.0)
+        subprob.linear_constraints.set_coefficients(coef_constrs_dict[(cut_var_index, 1)], v_vars_dict[1], 0.0)
+    print   
+    return cuts
             
